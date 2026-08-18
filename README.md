@@ -63,7 +63,24 @@ long OWASP reference you read, and `docs/checklists/` holds the standalone HTML 
 you tick through in a browser.
 
 At the root: `aliases` — the shell surface, `$IP` and friends plus the functions that use
-them (`my_scan`, `htricks`, `gtfo`, `serve`, …); source it, don't execute it.
+them (`my_scan`, `htricks`, `gtfo`, `serve`, …); source it, don't execute it. It is a
+loader; the aliases themselves live in `aliases.d/`, one file per area, loaded in
+numeric order because `00-state.sh` exports what the rest read:
+
+```
+00-state    target/attack config, $IP, $A_IP, _my_ip
+10-recon    my_scan, /etc/hosts helpers, monitor_host
+20-access   listeners, PowerShell encoding, ysoserial
+30-infra    serve, httptools, smb/ftp/http control
+40-tunnels  vpn, ligolo, reverse ssh
+50-time     clock alignment for Kerberos skew
+60-research htricks, gtfo, platt
+90-shell    navigation, git, single-letter shortcuts
+```
+
+Adding a fragment means adding its name to the list in `aliases` — the loader does not
+glob, so that a checkout with no `aliases.d/` still starts a shell cleanly.
+
 `scriptlist` enumerates everything above with descriptions — start there. `setup_links`
 publishes the executables.
 
