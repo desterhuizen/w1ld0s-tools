@@ -1,0 +1,5 @@
+[codespell]
+# iTerm is the macOS terminal referenced in setup_workspace's fallback branch,
+# not a misspelling of "term". Keep this list narrow so real typos in the
+# cheatsheets under common/content still get caught.
+ignore-words-list = iterm

@@ -1,0 +1,71 @@
+{"project":"System Info","description":"Obtain System information", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#system-info"}
+{"project":"System Info","description":"Search for kernel exploits using scripts", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#version-exploits"}
+{"project":"System Info","description":"Use Google to search for kernel exploits"}
+{"project":"System Info","description":"Use searchsploit to search for kernel exploits"}
+{"project":"System Info","description":"Interesting info in env vars", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#environment"}
+{"project":"System Info","description":"Passwords in PowerShell history", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#powershell-history"}
+{"project":"System Info","description":"Interesting info in Internet settings", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#internet-settings"}
+{"project":"System Info","description":"Drives", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#drives"}
+{"project":"System Info","description":"WSUS exploit", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#wsus"}
+{"project":"System Info","description":"AlwaysInstallElevated", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#alwaysinstallelevated"}
+{"project":"Logging/AV enumeration","description":"Check Audit ](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#audit-settings"}
+{"project":"Logging/AV enumeration","description":"Check LAPS", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#laps"}
+{"project":"Logging/AV enumeration","description":"Check if WDigest ](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#wdigest"}
+{"project":"Logging/AV enumeration","description":"LSA Protection", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#lsa-protection"}
+{"project":"Logging/AV enumeration","description":"Credentials Guard", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#credentials-guard"}
+{"project":"Logging/AV enumeration","description":"Cached Credentials", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#cached-credentials"}
+{"project":"Logging/AV enumeration","description":"Check if any AV", "link":"https://github.com/carlospolop/hacktricks/blob/master/windows-hardening/windows-av-bypass/README.md"}
+{"project":"Logging/AV enumeration","description":"AppLocker Policy", "link":"https://github.com/carlospolop/hacktricks/blob/master/windows-hardening/authentication-credentials-uac-and-efs/README.md#applocker-policy"}
+{"project":"Logging/AV enumeration","description":"UAC", "link":"https://github.com/carlospolop/hacktricks/blob/master/windows-hardening/authentication-credentials-uac-and-efs/uac-user-account-control/README.md"}
+{"project":"Logging/AV enumeration","description":"User Privileges", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#users-and-groups"}
+{"project":"Logging/AV enumeration","description":"Check current user privileges", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#users-and-groups"}
+{"project":"Logging/AV enumeration","description":"Are you member of any privileged group", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#privileged-groups"}
+{"project":"Logging/AV enumeration","description":"Check if you have [any of these tokens enabled](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#token-manipulation"}
+{"project":"Logging/AV enumeration","description":"Users Sessions", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#logged-users-sessions"}
+{"project":"Logging/AV enumeration","description":"Check[ users homes", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#home-folders"}
+{"project":"Logging/AV enumeration","description":"Check Password Policy", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#password-policy"}
+{"project":"Logging/AV enumeration","description":"What is[ inside the Clipboard", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#get-the-content-of-the-clipboard"}
+{"project":"Network","description":"Check current network information", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#network"}
+{"project":"Network","description":"Check hidden local services restricted to the outside"}
+{"project":"Running Processes","description":"Processes binaries file and folders permissions", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#file-and-folder-permissions"}
+{"project":"Running Processes","description":"Memory Password mining", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#memory-password-mining"}
+{"project":"Running Processes","description":"Insecure GUI apps", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#insecure-gui-apps"}
+{"project":"Running Processes","description":"Steal credentials with interesting processes via `ProcDump.exe` ? (firefox, chrome, etc ..."}
+{"project":"Services","description":"[Can you modify any service?](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#permissions"}
+{"project":"Services","description":"[Can you modify the binary that is executed by any service?](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#modify-service-binary-path"}
+{"project":"Services","description":"[Can you modify the registry of any service?](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#services-registry-modify-permissions"}
+{"project":"Services","description":"[Can you take advantage of any unquoted service binary path?](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#unquoted-service-paths"}
+{"project":"Applications","description":"Write permissions on installed applications", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#write-permissions"}
+{"project":"Applications","description":"Startup Applications", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#run-at-startup"}
+{"project":"Applications","description":"Vulnerable Drivers", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#drivers"}
+{"project":"DLL Hijacking","description":"Can you write in any folder inside PATH?"}
+{"project":"DLL Hijacking","description":"Is there any known service binary that tries to load any non-existant DLL?"}
+{"project":"DLL Hijacking","description":"Can you write in any binaries folder?"}
+{"project":"Network","description":"Enumerate the network (shares, interfaces, routes, neighbours, ..."}
+{"project":"Network","description":"Take a special look at network services listening on localhost (127.0.0.1"}
+{"project":"Windows Credentials","description":"Winlogon ](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#winlogon-credentials"}
+{"project":"Windows Credentials","description":"Windows Vault", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#credentials-manager-windows-vault"}
+{"project":"Windows Credentials","description":"Interesting DPAPI credentials", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#dpapi"}
+{"project":"Windows Credentials","description":"Passwords of saved Wifi networks", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#wifi"}
+{"project":"Windows Credentials","description":"Interesting info in saved RDP Connections", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#saved-rdp-connections"}
+{"project":"Windows Credentials","description":"Passwords in recently run commands", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#recently-run-commands"}
+{"project":"Windows Credentials","description":"Remote Desktop Credentials Manager", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#remote-desktop-credential-manager"}
+{"project":"Windows Credentials","description":"AppCmd.exe exists](https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#appcmd-exe"}
+{"project":"Windows Credentials","description":"SCClient.exe", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#scclient-sccm"}
+{"project":"Files and Registry (Credentials)","description":"Putty: Creds", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#putty-creds"}
+{"project":"Files and Registry (Credentials)","description":"SSH keys in registry", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#ssh-keys-in-registry"}
+{"project":"Files and Registry (Credentials)","description":"Passwords in unattended files", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#unattended-files"}
+{"project":"Files and Registry (Credentials)","description":"Any SAM & SYSTEM", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#sam-and-system-backups"}
+{"project":"Files and Registry (Credentials)","description":"Cloud credentials", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#cloud-credentials"}
+{"project":"Files and Registry (Credentials)","description":"McAfee SiteList.xml", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#mcafee-sitelist.xml"}
+{"project":"Files and Registry (Credentials)","description":"Cached GPP Password", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#cached-gpp-pasword"}
+{"project":"Files and Registry (Credentials)","description":"Password in IIS Web config file", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#iis-web-config"}
+{"project":"Files and Registry (Credentials)","description":"Interesting info in web logs", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#logs"}
+{"project":"Files and Registry (Credentials)","description":"Do you want to ask for credentials", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#ask-for-credentials"}
+{"project":"Files and Registry (Credentials)","description":"Interesting files inside the Recycle Bin", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#credentials-in-the-recyclebin"}
+{"project":"Files and Registry (Credentials)","description":"Other registry containing credentials", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#inside-the-registry"}
+{"project":"Files and Registry (Credentials)","description":"Inside Browser data", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#browsers-history"}
+{"project":"Files and Registry (Credentials)","description":"Generic password search", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#generic-password-search-in-files-and-registry"}
+{"project":"Files and Registry (Credentials)","description":"Tools", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#tools-that-search-for-passwords"}
+{"project":"Leaked Handlers","description":"Have you access to any handler of a process run by administrator?"}
+{"project":"Pipe Client Impersonation","description":"Check if you can abuse it"}

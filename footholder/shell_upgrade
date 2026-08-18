@@ -1,0 +1,11 @@
+echo # In reverse shell
+echo python -c 'import pty; pty.spawn("/bin/bash")'
+echo Ctrl-Z
+echo In Kali
+echo stty raw -echo
+echo fg
+echo # In reverse shell
+echo reset
+echo export SHELL=bash
+echo export TERM=xterm-256color
+echo "stty rows <num> columns <cols>"

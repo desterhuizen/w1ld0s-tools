@@ -1,0 +1,44 @@
+#!/bin/bash
+
+BASE_LINK_PATH=$HOME/.local/bin/
+
+# Check if directory exists and create if it doesn't
+if [[ ! -d $BASE_LINK_PATH ]]; then
+	mkdir -p "$BASE_LINK_PATH"
+fi
+
+PWD=$(pwd)
+
+mapfile -t items < <(find . -type f -executable -print | grep -v -E "\.git|simple_wp_plugin|setup_links" | sed "s/^\.\///g")
+
+if [[ $1 == "-d" ]]; then
+  read -r -p "Are you sure you want to delete all the links? (Y/N) " test
+  check=$(echo "$test" | tr '[:lower:]' '[:upper:]')
+  if [[ $check == "Y" ]]; then
+    for i in "${items[@]}"; do
+      LINK_PATH=$BASE_LINK_PATH$(basename "$i" | sed 's/\.[^.]*$//')
+      echo "Deleting ... $LINK_PATH"
+      rm -f "$LINK_PATH"
+    done
+  fi
+  exit
+fi
+
+for i in "${items[@]}"; do
+  LINK_PATH=$BASE_LINK_PATH$(basename "$i" | sed 's/\.[^.]*$//')
+  CREATE=1
+  if [ -L "$LINK_PATH" ]; then
+    read -r -p "Do you want to recreate: $LINK_PATH? (Y/N) " test
+    check=$(echo "$test" | tr '[:lower:]' '[:upper:]')
+    if [[ $check == "Y" ]]; then
+      echo "Deleting ... $LINK_PATH"
+      rm -f "$LINK_PATH"
+    else
+      CREATE=0
+    fi
+  fi	  
+  if [[ $CREATE -eq 1 ]]; then 
+    echo "Creating ... $PWD/$i->$LINK_PATH"
+    ln -s "$PWD/$i" "$LINK_PATH"
+  fi
+done

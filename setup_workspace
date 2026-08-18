@@ -1,0 +1,139 @@
+#!/bin/bash
+
+SELF="$(readlink -f "$0")"
+
+# Filter every logged pane is piped through, turning the raw terminal stream
+# into plain greppable text. In order: OSC sequences (BEL- or ST-terminated,
+# e.g. the OSC 7 cwd notice), ESC-k window titles and DCS strings, CSI colour
+# and cursor sequences, charset designators, remaining single-character escapes
+# (keypad mode etc), backspace-erases from prompt redraws, and finally CR
+# handling — trailing CRs go, and a mid-line CR means the terminal overwrote
+# what came before it, so only the last write on the line is kept.
+#
+# LC_ALL=C matters: under a UTF-8 locale the [ -/] and [@-~] ranges are
+# collated rather than byte ranges and match nothing. Comma delimiters because
+# / appears inside a range. Held in a heredoc so the sed quoting survives
+# verbatim into the shell tmux runs the pipe under.
+LOG_FILTER="$(cat <<'FILTER'
+LC_ALL=C sed -u -e 's,\x1b][^\x07\x1b]*\(\x07\|\x1b\\\),,g' -e 's,\x1b[kP][^\x1b]*\x1b\\,,g' -e 's,\x1b\[[0-9;?]*[ -/]*[@-~],,g' -e 's,\x1b[()*+][A-B0-2],,g' -e 's,\x1b[@-Z=><\\-_],,g' -e 's,[^\x08]\x08,,g' -e 's,\r\+$,,' -e 's,.*\r,,'
+FILTER
+)"
+
+# Re-entrant mode: the tmux hooks below invoke this script on itself to attach
+# a pane to its log file. Keeps the piping in one place instead of nesting
+# three levels of quoting inside a set-hook string.
+#   $2 = pane id, $3 = log directory, $4 = log file stem
+if [ "$1" = "--log-pane" ]; then
+  logfile="$3/$4.log"
+  mkdir -p "$3"
+  printf '\n===== %s started %s =====\n' "$4" "$(date '+%F %T %Z')" >> "$logfile"
+  # A single quote in the workspace path would break the inner shell command.
+  tmux pipe-pane -o -t "$2" "$LOG_FILTER >> '$logfile'"
+  exit 0
+fi
+
+# Check for environment variables
+if [ -z "$TARGET_BASE" ] || [ -z "$TARGET_NAME" ]; then
+  echo "Please set TARGET_BASE and TARGET_NAME environment variables"
+  echo "Example: export TARGET_BASE=/path/to/targets"
+  echo "Example: export TARGET_NAME=target_name"
+  exit 1
+fi
+
+# Lab-aware workspace root: ${BASE}/${LAB}/${NAME} when TARGET_LAB is set,
+# otherwise the flat ${BASE}/${NAME}. TARGET_LAB is exported from the target
+# config (config/lab.sh) the same way TARGET_NAME is.
+WS_ROOT="${TARGET_BASE}/${TARGET_LAB:+$TARGET_LAB/}${TARGET_NAME}"
+
+# Create target directories if they don't exist
+mkdir -p "$WS_ROOT"
+mkdir -p "$WS_ROOT/www"
+
+LOG_DIR="$WS_ROOT/logs"
+mkdir -p "$LOG_DIR"
+
+# Kill any existing tmux server (none running on a cold boot is not an error)
+tmux kill-server 2>/dev/null
+
+# Create the sessions here rather than letting each terminal create its own.
+# The terminals below only attach, so every pane is already piped to its log
+# before anything can be typed into it — no race against six terminals starting
+# in parallel. It is also the only way to hold the hooks: a tmux server with no
+# sessions exits immediately, so "tmux start-server" on its own would not stay
+# up long enough to be configured.
+for spec in "T1:$WS_ROOT" "T2:$WS_ROOT/www" "T3:$WS_ROOT" "M1:$WS_ROOT" "M2:$WS_ROOT" "M3:$WS_ROOT"; do
+  session="${spec%%:*}"
+  tmux new-session -d -s "$session" -c "${spec#*:}"
+  # "=NAME" forces an exact session match instead of a prefix match
+  "$SELF" --log-pane "$(tmux display-message -p -t "=$session" '#{pane_id}')" "$LOG_DIR" "$session"
+done
+
+# Cover whatever gets created later in the engagement. Splits and new windows
+# log to their own file (logs/M1-<window>.<pane>.log) so concurrent panes never
+# interleave into one log.
+tmux set-hook -g session-created "run-shell -b '\"$SELF\" --log-pane #{pane_id} \"$LOG_DIR\" \"#{session_name}\"'"
+tmux set-hook -g after-split-window "run-shell -b '\"$SELF\" --log-pane #{pane_id} \"$LOG_DIR\" \"#{session_name}-#{window_index}.#{pane_index}\"'"
+tmux set-hook -g after-new-window "run-shell -b '\"$SELF\" --log-pane #{pane_id} \"$LOG_DIR\" \"#{session_name}-#{window_index}.#{pane_index}\"'"
+
+echo "[+] Session logs: $LOG_DIR"
+
+# Keep i3-msg commands for Linux compatibility
+i3-msg 'workspace "1 Term "; append_layout $HOME/.config/i3/i3-workspace-1.json'
+
+i3-msg 'workspace "1 Term "; exec terminator -T T1 -e "tmux new -A -s T1 -c '"$WS_ROOT"' && zsh"'
+i3-msg 'workspace "1 Term "; exec terminator -T T2 -e "tmux new -A -s T2 -c '"$WS_ROOT"/www' && zsh"'
+i3-msg 'workspace "1 Term "; exec terminator -T T3 -e "tmux new -A -s T3 -c '"$WS_ROOT"' && zsh"'
+i3-msg 'workspace "1 Term "; exec terminator -T M1 -e "tmux new -A -s M1 -c '"$WS_ROOT"' && zsh"'
+i3-msg 'workspace "1 Term "; exec terminator -T M2 -e "tmux new -A -s M2 -c '"$WS_ROOT"' && zsh"'
+i3-msg 'workspace "1 Term "; exec terminator -T M3 -e "tmux new -A -s M3 -c '"$WS_ROOT"' && zsh"'
+
+# macOS alternative using iTerm2 (if available)
+if [[ "$(uname)" == "Darwin" ]]; then
+  echo "Detected macOS environment"
+  if command -v osascript &> /dev/null; then
+    echo "Setting up tmux sessions on macOS"
+    # Sessions were created and piped to their logs above
+
+    # Open iTerm2 with tabs for each session if iTerm2 is available
+    if osascript -e 'id of application "iTerm"' &> /dev/null; then
+      osascript <<EOF
+      tell application "iTerm"
+        activate
+        set newWindow to (create window with default profile)
+        tell current window
+          create tab with default profile
+          create tab with default profile
+          create tab with default profile
+          create tab with default profile
+          create tab with default profile
+        end tell
+        tell session of tab 1 of current window
+          write text "tmux attach -t T1"
+        end tell
+        tell session of tab 2 of current window
+          write text "tmux attach -t T2"
+        end tell
+        tell session of tab 3 of current window
+          write text "tmux attach -t T3"
+        end tell
+        tell session of tab 4 of current window
+          write text "tmux attach -t M1"
+        end tell
+        tell session of tab 5 of current window
+          write text "tmux attach -t M2"
+        end tell
+        tell session of tab 6 of current window
+          write text "tmux attach -t M3"
+        end tell
+      end tell
+EOF
+    else
+      echo "iTerm2 not found, you can manually attach to tmux sessions:"
+      echo "tmux attach -t T1 (or T2, T3, M1, M2, M3)"
+    fi
+  else
+    echo "AppleScript not available, unable to set up iTerm2 windows"
+    echo "You can manually attach to tmux sessions:"
+    echo "tmux attach -t T1 (or T2, T3, M1, M2, M3)"
+  fi
+fi

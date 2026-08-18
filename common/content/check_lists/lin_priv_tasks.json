@@ -1,0 +1,76 @@
+{"project":"System Information","description":"Get OS information"}
+{"project":"System Information","description":"Check the PATH","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#path"}
+{"project":"System Information","description":"Check env variables","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#env-info"}
+{"project":"System Information","description":"Search for kernel exploits","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#kernel-exploits"}
+{"project":"System Information","description":"Check if the sudo version is vulnerable](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#sudo-version"}
+{"project":"System Information","description":"Dmesg signature verification failed](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#dmesg-signature-verification-failed"}
+{"project":"System Information","description":"More system enum ([date, system stats, cpu info, printers](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#more-system-enumeration"}
+{"project":"System Information","description":"[Enumerate more defenses](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#enumerate-possible-defenses"}
+{"project":"Drives","description":"List mounted drives"}
+{"project":"Drives","description":"Any unmounted drive?"}
+{"project":"Drives","description":"Any creds in fstab?"}
+{"project":"Installed Software","description":"Check for[ useful software","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#useful-software"}
+{"project":"Installed Software","description":"Check for vulnerable software","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#vulnerable-software-installed"}
+{"project":"Processes","description":"Is any unknown software running?"}
+{"project":"Processes","description":"Is any software running with more privileges than it should have?"}
+{"project":"Processes","description":"Search for exploits of running processes (especially the version running"}
+{"project":"Processes","description":"Can you modify the binary of any running process?"}
+{"project":"Processes","description":"Monitor processes and check if any interesting process is running frequently."}
+{"project":"Processes","description":"Can you read some interesting process memory (where passwords could be saved"}
+{"project":"Scheduled/Cron jobs?","description":"Is the PATH ](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#cron-path"}
+{"project":"Scheduled/Cron jobs?","description":"Any wildcard ](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#cron-using-a-script-with-a-wildcard-wildcard-injection"}
+{"project":"Scheduled/Cron jobs?","description":"Some modifiable script ](https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#cron-script-overwriting-and-symlink"}
+{"project":"Scheduled/Cron jobs?","description":"Have you detected that some script could be or are being executed very frequently","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/#frequent-cron-jobs"}
+{"project":"Services","description":"Any writable .service file?"}
+{"project":"Services","description":"Any writable binary executed by a service?"}
+{"project":"Services","description":"Any writable folder in systemd PATH?"}
+{"project":"Timers","description":"Any writable timer?"}
+{"project":"Sockets","description":"Any writable .socket file?"}
+{"project":"Sockets","description":"Can you communicate with any socket?"}
+{"project":"Sockets","description":"HTTP sockets with interesting info?"}
+{"project":"D-Bus","description":"Can you communicate with any D-Bus?"}
+{"project":"Network","description":"Enumerate the network to know where you are"}
+{"project":"Network","description":"Open ports you couldn't access before getting a shell inside the machine?"}
+{"project":"Network","description":"Can you sniff traffic using `tcpdump`?"}
+{"project":"Users","description":"Generic users/groups enumeration"}
+{"project":"Users","description":"Do you have a very big UID? Is the machine vulnerable?"}
+{"project":"Users","description":"Can you escalate privileges thanks to a group","link":"https://book.hacktricks.xyz/pentesting-web/privilege-escalation/interesting-groups-linux-pe/"}
+{"project":"Users","description":"Clipboard data?"}
+{"project":"Users","description":"Password Policy?"}
+{"project":"Users","description":"Try to use every known password that you have discovered previously to login with each possible user. Try to login also without a password."}
+{"project":"Writable PATH","description":"If you have write privileges over some folder in PATH you may be able to escalate privileges"}
+{"project":"SUDO and SUID commands","description":"Can you execute any command with sudo? Can you use it to READ, WRITE or EXECUTE anything as root? (GTFOBins","link":"https://gtfobins.github.io"}
+{"project":"SUDO and SUID commands","description":"Is any exploitable SUID binary? (GTFOBins","link":"https://gtfobins.github.io"}
+{"project":"SUDO and SUID commands","description":"Are sudo commands limited by path? can you bypass the restrictions](privilege-escalation/#sudo-execution-bypassing-paths"}
+{"project":"SUDO and SUID commands","description":"Sudo/SUID binary without path indicated","link":"privilege-escalation/#sudo-command-suid-binary-without-command-path"}
+{"project":"SUDO and SUID commands","description":"SUID binary specifying path","link":"privilege-escalation/#suid-binary-with-command-path"}
+{"project":"SUDO and SUID commands","description":"LD_PRELOAD vuln","link":"privilege-escalation/#ld_preload"}
+{"project":"SUDO and SUID commands","description":"Lack of .so library in SUID binary","link":"privilege-escalation/#suid-binary-so-injection"}
+{"project":"SUDO and SUID commands","description":"SUDO tokens available","link":"privilege-escalation/#reusing-sudo-tokens"}
+{"project":"SUDO and SUID commands","description":"Can you read or modify sudoers files","link":"privilege-escalation/#etc-sudoers-etc-sudoers-d"}
+{"project":"SUDO and SUID commands","description":"Can you modify /etc/ld.so.conf.d/","link":"privilege-escalation/#etc-ld-so-conf-d"}
+{"project":"SUDO and SUID commands","description":"OpenBSD DOAS","link":"privilege-escalation/#doas"}
+{"project":"Capabilities","description":"Has any binary any unexpected capability?"}
+{"project":"ACLs","description":"Has any file any unexpected ACL?"}
+{"project":"Open Shell sessions","description":"screen"}
+{"project":"Open Shell sessions","description":"tmux"}
+{"project":"SSH","description":"Debian OpenSSL Predictable PRNG - CVE-2008-0166","link":"privilege-escalation/#debian-openssl-predictable-prng-cve-2008-0166"}
+{"project":"SSH","description":"SSH Interesting configuration values","link":"privilege-escalation/#ssh-interesting-configuration-values"}
+{"project":"Interesting Files","description":"Profile files - Read sensitive data? Write to privesc?"}
+{"project":"Interesting Files","description":"passwd/shadow files - Read sensitive data? Write to privesc?"}
+{"project":"Interesting Files","description":"Check commonly interesting folders for sensitive data"}
+{"project":"Interesting Files","description":"Weird Location/Owned files, you may have access to or alter executable files"}
+{"project":"Interesting Files","description":"Modified in last mins"}
+{"project":"Interesting Files","description":"Sqlite DB files"}
+{"project":"Interesting Files","description":"Hidden files"}
+{"project":"Interesting Files","description":"Script/Binaries in PATH"}
+{"project":"Interesting Files","description":"Web files (passwords?"}
+{"project":"Interesting Files","description":"Backups?"}
+{"project":"Interesting Files","description":"Known files that contains passwords: Use Linpeas and LaZagne"}
+{"project":"Interesting Files","description":"Generic search"}
+{"project":"Writable Files","description":"Modify python library to execute arbitrary commands?"}
+{"project":"Writable Files","description":"Can you modify log files? Logtotten exploit"}
+{"project":"Writable Files","description":"Can you modify /etc/sysconfig/network-scripts/? Centos/Redhat exploit"}
+{"project":"Writable Files","description":"Can you write in ini, int.d, systemd or rc.d files","link":"privilege-escalation/#init-init-d-systemd-and-rc-d"}
+{"project":"Other tricks","description":"Can you abuse NFS to escalate privileges","link":"privilege-escalation/#nfs-privilege-escalation"}
+{"project":"Other tricks","description":"Do you need to escape from a restrictive shell","link":"privilege-escalation/#escaping-from-restricted-shells"}

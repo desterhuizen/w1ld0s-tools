@@ -1,0 +1,17 @@
+LOCATION=/var/www/html/tools/
+mkdir $LOCATION
+cp $HOME/tools/binaries/SysinternalsSuite/accesschk64.exe $LOCATION
+cp $HOME/tools/binaries/SysinternalsSuite/PsExec64.exe $LOCATION
+cp $HOME/tools/binaries/rubeus/Rubeus.exe $LOCATION
+cp $HOME/tools/binaries/godpotato/GodPotato-NET4.exe $LOCATION
+cp $HOME/tools/binaries/pspy/pspy64 $LOCATION
+cp $HOME/tools/binaries/pspy/pspy32 $LOCATION
+cp $HOME/tools/binaries/printspoofer/PrintSpoofer64.exe $LOCATION
+cp $HOME/tools/binaries/printspoofer/PrintSpoofer32.exe $LOCATION
+cp $HOME/tools/repos/PowerUpSQL/PowerUpSQL.ps1 $LOCATION
+cp $HOME/tools/repos/FullBypass/FullBypass/FullBypass/FullBypass.csproj $LOCATION
+cp /usr/share/powershell-empire/empire/server/data/module_source/credentials/Invoke-Kerberoast.ps1 $LOCATION
+cp $HOME/tools/repos/PowerSploit/Exfiltration/Invoke-Mimikatz.ps1 $LOCATION
+cp $HOME/tools/repos/PowerSploit/Privesc/PowerUp.ps1 $LOCATION
+cp $HOME/tools/repos/PowerSploit/Recon/PowerView.ps1 $LOCATION
+cp $HOME/tools/repos/mimikatz-bins/x64/mimikatz.exe $LOCATION

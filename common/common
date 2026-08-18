@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# Script configuration
+COMMON_PATH="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/common"
+CONTENT=$COMMON_PATH/content
+EXEC="glow"
+
+# Get list of available documents (excluding check_lists directory)
+# Sort on the full filename before the extension is stripped, so the order
+# matches what ls produced (web.md sorts after web_checklist.md under the
+# locale's collation, but plain "web" sorts before "web_checklist").
+mapfile -t AVAILABLE_LIST < <(find "$CONTENT" -maxdepth 1 -type f -printf '%f\n' | sort | sed 's/\.[^.]*$//' | grep -v 'check_lists')
+
+# Function to display usage information
+show_usage() {
+    echo -e "Usage:"
+    echo -e "\tcommon <name>\n"
+    echo -e "names:"
+    for i in "${AVAILABLE_LIST[@]}"; do
+        head=$(head -n 1 "$CONTENT/$i.md" | cut -c 3- )
+        spacer="\t-"
+        # wc -c counted the trailing newline too, so the old cutoff of 8 is 7 here
+        if [[ ${#i} -lt 7 ]]; then
+            spacer="\t\t-"
+        fi
+        echo -e "\t$i $spacer $head"
+    done
+    echo -e "Flags:"
+    echo -e "flags are positional and must be the first argument"
+    echo -e "\t-v: Open vi on the item"
+    echo -e "\t-g: grep for the value in all the possible content"
+    echo -e "\t-t: Create checklist in Taskwarrior"
+    echo -e "\t-c: Prints the completion script"
+}
+
+# Function to print completion script
+print_completion() {
+    # [*] joins the names into one space-separated word list for complete -W
+    echo -e "echo complete -W \\\"${AVAILABLE_LIST[*]}\\\" common >> ~/.zshrc"
+    echo -e "echo complete -W \\\"${AVAILABLE_LIST[*]}\\\" common >> ~/.bashrc"
+}
+
+# Function to open document in vi
+edit_document() {
+    local doc="$1"
+    if [[ -f "$CONTENT/$doc.md" ]]; then
+        vi -v "$CONTENT/$doc.md"
+    else
+        echo "Error: Document '$doc' not found."
+        exit 1
+    fi
+}
+
+# Function to import task checklist
+import_checklist() {
+    local checklist="$1"
+
+    # Check if Taskwarrior is installed
+    if [ ! -f "/usr/bin/task" ]; then
+        echo "Error: Please install Taskwarrior"
+        exit 1
+    fi
+
+    # Check if checklist exists
+    if [ -f "$CONTENT/check_lists/${checklist}_tasks.json" ]; then
+        echo "Loading the checklist from $CONTENT/check_lists/${checklist}_tasks.json"
+        task import "$CONTENT/check_lists/${checklist}_tasks.json"
+    else
+        echo "Error: No checklist found for '$checklist'"
+    fi
+}
+
+# Function to search in content
+search_content() {
+    local search_term="$1"
+    grep "$search_term" -R "$CONTENT"
+}
+
+# Function to display document
+display_document() {
+    local doc="$1"
+    if [[ -f "$CONTENT/$doc.md" ]]; then
+        $EXEC "$CONTENT/$doc.md"
+    else
+        echo "Error: '$doc' is not a valid option."
+        exit 1
+    fi
+}
+
+# Main script logic
+if [[ $# == 0 ]]; then
+    show_usage
+elif [ "$1" == "-c" ]; then
+    print_completion
+elif [ "$1" == "-v" ]; then
+    edit_document "$2"
+elif [ "$1" == "-t" ]; then
+    import_checklist "$2"
+elif [ "$1" == "-g" ]; then
+    search_content "$2"
+elif [ -f "$CONTENT/$1.md" ]; then
+    display_document "$1"
+else
+    echo "Error: '$1' is not a valid option."
+fi

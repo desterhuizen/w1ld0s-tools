@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+if [[ "$1" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+ip=$1
+# Emits a scanner to paste on the target. Only $ip is substituted here; \$host
+# and \$port below are deliberately literal and expand on the target instead.
+# shellcheck disable=SC2016
+echo '
+echo "#\!/bin/bash
+host='"$ip"'
+for port in {1..65535}; do
+    timeout .1 bash -c \"echo >/dev/tcp/\$host/\$port\" &&
+        echo \"port \$port is open\"
+done
+echo \"Done\""'
+fi
+
+

@@ -1,0 +1,213 @@
+#!/bin/bash
+#
+# scriptlist - Display a list of available penetration testing scripts
+#
+# This script shows an organized list of all tools in the w1ld0s-tools repository
+# with options for filtering and displaying details.
+
+SCRIPT_DIR="${W1LD0S_TOOLS_DIR:-${HOME}/tools/repos/w1ld0s-tools}"
+VERSION="1.0.0"
+
+# Define colors for better readability
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Function to display help information
+function show_help() {
+    cat << EOF
+Usage: scriptlist [OPTIONS] [SEARCH_TERM]
+
+Options:
+  -h, --help       Display this help message
+  -c, --category   List scripts by category
+  -d, --details    Show detailed descriptions for each script
+  -f, --find       Find scripts matching a specific term
+  -v, --version    Display version information
+
+Examples:
+  scriptlist                   Show all scripts
+  scriptlist -c                List scripts by category
+  scriptlist -f exploit        Find all scripts with 'exploit' in the name
+  scriptlist -d                Show details for all scripts
+  scriptlist -c -f payload     List categorized scripts containing 'payload'
+
+EOF
+    exit 0
+}
+
+# Function to display version information
+function show_version() {
+    echo -e "${BLUE}scriptlist${NC} version ${GREEN}${VERSION}${NC}"
+    echo "Part of the w1ld0s-tools collection"
+    exit 0
+}
+
+# Function to display scripts by category
+function show_by_category() {
+    local search_term="$1"
+
+    echo -e "${GREEN}=================================================${NC}"
+    echo -e "${GREEN}=  PENETRATION TESTING SCRIPTS BY CATEGORY      =${NC}"
+    echo -e "${GREEN}=================================================${NC}"
+
+    # Core Tools
+    echo -e "\n${YELLOW}=== CORE TOOLS ===${NC}"
+    find "$SCRIPT_DIR" -maxdepth 1 -type f -not -path "*/\.*" | grep -v "README.md\|scriptlist\|setup_" | sort | grep -i "$search_term" || true
+
+    # Target Management
+    echo -e "\n${YELLOW}=== TARGET MANAGEMENT ===${NC}"
+    find "$SCRIPT_DIR/target" -type f -not -path "*/\.*" -not -path "*/legacy/*" -not -path "*/config/*" | sort | grep -i "$search_term" || true
+
+    # Attack Management
+    echo -e "\n${YELLOW}=== ATTACK MANAGEMENT ===${NC}"
+    find "$SCRIPT_DIR/attack" -type f -not -path "*/\.*" | sort | grep -i "$search_term" || true
+
+    # Scanning and Enumeration
+    echo -e "\n${YELLOW}=== SCANNING & ENUMERATION ===${NC}"
+    find "$SCRIPT_DIR/enum_scripts" "$SCRIPT_DIR/autorecon" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+
+    # Exploitation
+    echo -e "\n${YELLOW}=== EXPLOITATION ===${NC}"
+    find "$SCRIPT_DIR/payloads" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+
+    # Post-Exploitation
+    echo -e "\n${YELLOW}=== POST-EXPLOITATION ===${NC}"
+    find "$SCRIPT_DIR/footholder" "$SCRIPT_DIR/powershell" "$SCRIPT_DIR/log_analysis" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+
+    # Web Tools
+    echo -e "\n${YELLOW}=== WEB TOOLS ===${NC}"
+    find "$SCRIPT_DIR/web_scan" "$SCRIPT_DIR/simple_wp_plugin" "$SCRIPT_DIR/webserver" "$SCRIPT_DIR/xss_server" "$SCRIPT_DIR/simple_sqlite_db" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+
+    # Metasploit Scripts
+    echo -e "\n${YELLOW}=== METASPLOIT SCRIPTS ===${NC}"
+    find "$SCRIPT_DIR/msf_scripts" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+
+    # Windows Domain Tools
+    echo -e "\n${YELLOW}=== WINDOWS DOMAIN TOOLS ===${NC}"
+    find "$SCRIPT_DIR/windows_domain" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+
+    echo -e "${GREEN}=================================================${NC}"
+}
+
+# Function to display detailed descriptions
+function show_details() {
+    local search_term="$1"
+
+    echo -e "${GREEN}=================================================${NC}"
+    echo -e "${GREEN}=  SCRIPT DETAILS                               =${NC}"
+    echo -e "${GREEN}=================================================${NC}"
+
+    # Core Scripts
+    echo -e "\n${YELLOW}CORE SCRIPTS:${NC}"
+    echo -e "${CYAN}aliases${NC} - Collection of useful penetration testing aliases and functions"
+    echo -e "${CYAN}portlist${NC} - Extract port lists from nmap scan files"
+    echo -e "${CYAN}macro_formatter${NC} - Format macros for Office documents"
+
+    # Target Management
+    echo -e "\n${YELLOW}TARGET MANAGEMENT:${NC}"
+    echo -e "${CYAN}target${NC} - Manage pentest project dirs, target state, and structured host notes (-F/-A/-H/-X)"
+
+    # Attack Management
+    echo -e "\n${YELLOW}ATTACK MANAGEMENT:${NC}"
+    echo -e "${CYAN}attack${NC} - Manage attack infrastructure and payloads"
+
+    # Enumeration
+    echo -e "\n${YELLOW}SCANNING & ENUMERATION:${NC}"
+    echo -e "${CYAN}autorecon.sh${NC} - Automated reconnaissance script"
+    echo -e "${CYAN}basic_enum.ps1/sh${NC} - Basic system enumeration for Windows/Linux"
+    echo -e "${CYAN}port_scan.sh${NC} - Port scanning utility"
+    echo -e "${CYAN}ssh-username-enum.py${NC} - SSH username enumeration tool"
+
+    # Exploitation
+    echo -e "\n${YELLOW}EXPLOITATION:${NC}"
+    echo -e "${CYAN}base_exploit.py${NC} - Python template for exploit development"
+
+    # Post Exploitation
+    echo -e "\n${YELLOW}POST-EXPLOITATION:${NC}"
+    echo -e "${CYAN}footholder/footholder.ps1/.sh${NC} - Foothold maintenance scripts"
+    echo -e "${CYAN}footholder/shell_upgrade${NC} - Upgrade simple shells to fully interactive TTYs"
+    echo -e "${CYAN}powershell/Spray-Passwords.ps1${NC} - Password spraying tool"
+    echo -e "${CYAN}log_analysis/log_search.psm1${NC} - PowerShell module for log analysis"
+
+    echo -e "${GREEN}=================================================${NC}"
+    echo -e "For full details, see the README.md file."
+}
+
+# Function to display a standard list of scripts
+function show_standard_list() {
+    local search_option="$1"
+    local search_term="$2"
+    # Array, not a bare word: TREE_OPTIONS is normally empty and a quoted empty
+    # string would reach tree as a stray argument.
+    local tree_opts=()
+    [ -n "$search_option" ] && tree_opts=("$search_option")
+
+    echo -e "${GREEN}=================================================${NC}"
+    echo -e "${GREEN}=  Current script list                          =${NC}"
+    echo -e "${GREEN}=================================================${NC}"
+
+    if [ -z "$search_term" ]; then
+        tree --noreport -I "README.md" -I "scriptlist" -I "venv" -I "attacker" -I "target" -I "setup_links" "$SCRIPT_DIR/" "${tree_opts[@]}"
+    else
+        tree --noreport -I "README.md" -I "scriptlist" -I "venv" -I "attacker" -I "target" -I "setup_links" "$SCRIPT_DIR/" "${tree_opts[@]}" | grep -i --color=always "$search_term"
+    fi
+
+    echo -e "${GREEN}=================================================${NC}"
+}
+
+# Parse command line options
+SHOW_CATEGORIES=false
+SHOW_DETAILS=false
+SEARCH_TERM=""
+TREE_OPTIONS=""
+
+# Process options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            ;;
+        -v|--version)
+            show_version
+            ;;
+        -c|--category)
+            SHOW_CATEGORIES=true
+            shift
+            ;;
+        -d|--details)
+            SHOW_DETAILS=true
+            shift
+            ;;
+        -f|--find)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                SEARCH_TERM="$2"
+                shift 2
+            else
+                echo -e "${RED}Error: --find requires a search term${NC}"
+                exit 1
+            fi
+            ;;
+        -*)
+            echo -e "${RED}Unknown option: $1${NC}"
+            echo "Use 'scriptlist --help' for usage information."
+            exit 1
+            ;;
+        *)
+            SEARCH_TERM="$1"
+            shift
+            ;;
+    esac
+done
+
+# Execute the appropriate function based on options
+if [ "$SHOW_CATEGORIES" = true ]; then
+    show_by_category "$SEARCH_TERM"
+elif [ "$SHOW_DETAILS" = true ]; then
+    show_details "$SEARCH_TERM"
+else
+    show_standard_list "$TREE_OPTIONS" "$SEARCH_TERM"
+fi

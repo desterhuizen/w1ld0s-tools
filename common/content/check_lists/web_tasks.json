@@ -1,0 +1,58 @@
+{"project": "User Input", "description":"Abusing hop-by-hop headers","detail": "https://book.hacktricks.xyz/pentesting-web/abusing-hop-by-hop-headers.md"}
+{"project": "User Input", "description":"Cache Poisoning/Cache Deception","detail": "https://book.hacktricks.xyz/pentesting-web/cache-deception/"}
+{"project": "User Input", "description":"HTTP Request Smuggling","detail": "https://book.hacktricks.xyz/pentesting-web/http-request-smuggling/"}
+{"project": "User Input", "description":"H2C Smuggling","detail": "https://book.hacktricks.xyz/pentesting-web/h2c-smuggling.md"}
+{"project": "User Input", "description":"Server Side Inclusion/Edge Side Inclusion","detail": "https://book.hacktricks.xyz/pentesting-web/server-side-inclusion-edge-side-inclusion-injection.md"}
+{"project": "User Input", "description":"Uncovering Cloudflare","detail": "https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/uncovering-cloudflare.md"}
+{"project": "User Input", "description":"XSLT Server Side Injection","detail": "https://book.hacktricks.xyz/pentesting-web/xslt-server-side-injection-extensible-stylesheet-language-transformations.md"}
+{"project": "User Input", "description":"Proxy / WAF Protections Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/proxy-waf-protections-bypass.md"}
+{"project": "Reflected Values", "description":"Client Side Template Injection","detail": "https://book.hacktricks.xyz/pentesting-web/client-side-template-injection-csti.md"}
+{"project": "Reflected Values", "description":"Command Injection","detail": "https://book.hacktricks.xyz/pentesting-web/command-injection.md"}
+{"project": "Reflected Values", "description":"CRLF","detail": "https://book.hacktricks.xyz/pentesting-web/crlf-0d-0a.md"}
+{"project": "Reflected Values", "description":"Dangling Markup","detail": "https://book.hacktricks.xyz/pentesting-web/dangling-markup-html-scriptless-injection/"}
+{"project": "Reflected Values", "description":"File Inclusion/Path Traversal","detail": "https://book.hacktricks.xyz/pentesting-web/file-inclusion/"}
+{"project": "Reflected Values", "description":"Open Redirect","detail": "https://book.hacktricks.xyz/pentesting-web/open-redirect.md"}
+{"project": "Reflected Values", "description":"Prototype Pollution to XSS","detail": "https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution/#client-side-prototype-pollution-to-xss"}
+{"project": "Reflected Values", "description":"Server Side Inclusion/Edge Side Inclusion","detail": "https://book.hacktricks.xyz/pentesting-web/server-side-inclusion-edge-side-inclusion-injection.md"}
+{"project": "Reflected Values", "description":"Server Side Request Forgery","detail": "https://book.hacktricks.xyz/pentesting-web/ssrf-server-side-request-forgery/"}
+{"project": "Reflected Values", "description":"Server Side Template Injection","detail": "https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/"}
+{"project": "Reflected Values", "description":"Reverse Tab Nabbing","detail": "https://book.hacktricks.xyz/pentesting-web/reverse-tab-nabbing.md"}
+{"project": "Reflected Values", "description":"XSLT Server Side Injection","detail": "https://book.hacktricks.xyz/pentesting-web/xslt-server-side-injection-extensible-stylesheet-language-transformations.md"}
+{"project": "Reflected Values", "description":"XSS","detail": "https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/"}
+{"project": "Reflected Values", "description":"XSSI","detail": "https://book.hacktricks.xyz/pentesting-web/xssi-cross-site-script-inclusion.md"}
+{"project": "Reflected Values", "description":"XS-Search","detail": "https://book.hacktricks.xyz/pentesting-web/xs-search/"}
+{"project": "Search functionalities", "description":"File Inclusion/Path Traversal","detail": "https://book.hacktricks.xyz/pentesting-web/file-inclusion/"}
+{"project": "Search functionalities", "description":"NoSQL Injection","detail": "https://book.hacktricks.xyz/pentesting-web/nosql-injection.md"}
+{"project": "Search functionalities", "description":"LDAP Injection","detail": "https://book.hacktricks.xyz/pentesting-web/ldap-injection.md"}
+{"project": "Search functionalities", "description":"ReDoS","detail": "https://book.hacktricks.xyz/pentesting-web/regular-expression-denial-of-service-redos.md"}
+{"project": "Search functionalities", "description":"SQL Injection","detail": "https://book.hacktricks.xyz/pentesting-web/sql-injection/"}
+{"project": "Search functionalities", "description":"XPATH Injection","detail": "https://book.hacktricks.xyz/pentesting-web/xpath-injection.md"}
+{"project": "Forms, WebSockets and PostMsgs", "description":"Cross Site Request Forgery","detail": "https://book.hacktricks.xyz/pentesting-web/csrf-cross-site-request-forgery.md"}
+{"project": "Forms, WebSockets and PostMsgs", "description":"Cross-site WebSocket hijacking (CSWSH)","detail": "https://book.hacktricks.xyz/pentesting-web/websocket-attacks.md"}
+{"project": "Forms, WebSockets and PostMsgs", "description":"PostMessage Vulnerabilities","detail": "https://book.hacktricks.xyz/pentesting-web/postmessage-vulnerabilities/"}
+{"project": "HTTP Headers", "description":"Clickjacking","detail": "https://book.hacktricks.xyz/pentesting-web/clickjacking.md"}
+{"project": "HTTP Headers", "description":"Content Security Policy bypass","detail": "https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass/"}
+{"project": "HTTP Headers", "description":"Cookies Hacking","detail": "https://book.hacktricks.xyz/pentesting-web/hacking-with-cookies/"}
+{"project": "HTTP Headers", "description":"CORS - Misconfigurations & Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/cors-bypass.md"}
+{"project": "Bypasses", "description":"2FA/OTP Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/2fa-bypass.md"}
+{"project": "Bypasses", "description":"Bypass Payment Process","detail": "https://book.hacktricks.xyz/pentesting-web/bypass-payment-process.md"}
+{"project": "Bypasses", "description":"Captcha Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/captcha-bypass.md"}
+{"project": "Bypasses", "description":"Login Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/login-bypass/"}
+{"project": "Bypasses", "description":"Race Condition","detail": "https://book.hacktricks.xyz/pentesting-web/race-condition.md"}
+{"project": "Bypasses", "description":"Rate Limit Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/rate-limit-bypass.md"}
+{"project": "Bypasses", "description":"Reset Forgotten Password Bypass","detail": "https://book.hacktricks.xyz/pentesting-web/reset-password.md"}
+{"project": "Bypasses", "description":"Registration Vulnerabilities","detail": "https://book.hacktricks.xyz/pentesting-web/registration-vulnerabilities.md"}
+{"project": "Structured objects / Specific functionalities", "description":"Deserialization","detail": "https://book.hacktricks.xyz/pentesting-web/deserialization/"}
+{"project": "Structured objects / Specific functionalities", "description":"Email Header Injection","detail": "https://book.hacktricks.xyz/pentesting-web/email-injections.md"}
+{"project": "Structured objects / Specific functionalities", "description":"JWT Vulnerabilities","detail": "https://book.hacktricks.xyz/pentesting-web/hacking-jwt-json-web-tokens.md"}
+{"project": "Structured objects / Specific functionalities", "description":"XML External Entity","detail": "https://book.hacktricks.xyz/pentesting-web/xxe-xee-xml-external-entity.md"}
+{"project": "Files", "description":"File Upload","detail": "https://book.hacktricks.xyz/pentesting-web/file-upload/"}
+{"project": "Files", "description":"Formula Injection","detail": "https://book.hacktricks.xyz/pentesting-web/formula-csv-doc-latex-ghostscript-injection.md"}
+{"project": "Files", "description":"PDF Injection","detail": "https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/pdf-injection.md"}
+{"project": "Files", "description":"Server Side XSS","detail": "https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/server-side-xss-dynamic-pdf.md"}
+{"project": "External Identity Management", "description":"OAUTH to Account takeover","detail": "https://book.hacktricks.xyz/pentesting-web/oauth-to-account-takeover.md"}
+{"project": "External Identity Management", "description":"SAML Attacks","detail": "https://book.hacktricks.xyz/pentesting-web/saml-attacks/"}
+{"project": "Other Helpful Vulnerabilities", "description":"Domain/Subdomain takeover","detail": "https://book.hacktricks.xyz/pentesting-web/domain-subdomain-takeover.md"}
+{"project": "Other Helpful Vulnerabilities", "description":"IDOR","detail": "https://book.hacktricks.xyz/pentesting-web/idor.md"}
+{"project": "Other Helpful Vulnerabilities", "description":"Parameter Pollution","detail": "https://book.hacktricks.xyz/pentesting-web/parameter-pollution.md"}
+{"project": "Other Helpful Vulnerabilities", "description":"Unicode Normalization vulnerability","detail": "https://book.hacktricks.xyz/pentesting-web/unicode-injection/"}

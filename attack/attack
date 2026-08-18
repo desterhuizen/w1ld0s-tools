@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# Constants
+ATTACKER_HOME="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/attack"
+ATTACKER_CONFIG="$ATTACKER_HOME/attacker"
+DEVICES=$(nmcli -c no -f device c 2>/dev/null | grep -v DEVICE || ifconfig | grep -o '^[a-z0-9]\+' | grep -v '^lo')
+
+# Function to display usage
+show_usage() {
+  echo "Usage: attack [INTERFACE|IP]"
+  echo ""
+  echo "When run without arguments, displays current attack interface and IP."
+  echo "When provided with an interface name, sets that interface as the attack interface."
+  echo "When provided with an IP address, sets that as the attack IP."
+  echo ""
+  echo "Available interfaces:"
+  echo "$DEVICES" | tr ' ' '\n' | grep -v '^$' | while read -r dev; do
+    ip=$(ifconfig "$dev" 2>/dev/null | grep 'inet ' | awk '{print $2}')
+    if [ -n "$ip" ]; then
+      echo "  $dev: $ip"
+    else
+      echo "  $dev: No IP assigned"
+    fi
+  done
+}
+
+# Function to update attacker config
+update_config() {
+  local ip="$1"
+  local dev="$2"
+
+  echo "export A_IP=$ip" > "$ATTACKER_CONFIG"
+  echo "export A_DEV=$dev" >> "$ATTACKER_CONFIG"
+
+  # Create config if it doesn't exist
+  touch "$ATTACKER_CONFIG"
+}
+
+# Load current configuration
+if [ -f "$ATTACKER_CONFIG" ]; then
+  # shellcheck source=/dev/null
+  source "$ATTACKER_CONFIG"
+else
+  # Default values if config doesn't exist
+  A_IP=""
+  A_DEV=""
+fi
+
+# Process command line arguments
+if [ $# -eq 0 ]; then
+  if [ -z "$A_DEV" ] && [ -z "$A_IP" ]; then
+    echo "No attack configuration set. Use 'attack [INTERFACE|IP]' to configure."
+    show_usage
+    exit 1
+  fi
+  echo -e "Attack DEV\t: $A_DEV"
+  echo -e "Attack IP \t: $A_IP"
+elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+  show_usage
+else
+  # Check if input is a valid device
+  if echo "$DEVICES" | grep -w "$1" > /dev/null; then
+    dev=$1
+    ip=$(ifconfig "$dev" 2>/dev/null | grep 'inet ' | awk '{print $2}')
+
+    if [ -z "$ip" ]; then
+      echo "Warning: Interface $dev does not have an IP address assigned."
+      echo "Configuration saved, but you may need to assign an IP to this interface."
+      update_config "" "$dev"
+    else
+      echo "Setting attack interface to $dev with IP $ip"
+      update_config "$ip" "$dev"
+    fi
+  # Check if input is a valid IP address
+  elif [[ "$1" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    ip=$1
+    echo "Setting attack IP to $ip"
+    update_config "$ip" ""
+  else
+    echo -e "Invalid input: $1"
+    show_usage
+    exit 1
+  fi
+fi
+
+# Reload configuration to ensure environment variables are set
+if [ -f "$ATTACKER_CONFIG" ]; then
+  # shellcheck source=/dev/null
+  source "$ATTACKER_CONFIG"
+fi

@@ -1,0 +1,70 @@
+---
+# This workflow executes several linters on changed files based on languages
+# used in your code base whenever you push code or open a pull request.
+#
+# You can adjust the behavior by modifying this file.
+# For more information, see:
+# https://github.com/super-linter/super-linter
+name: Lint Code Base
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  run-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        # Pinned to a commit SHA (v7.0.1) rather than a tag: a tag can be moved
+        # to point at different code, a SHA cannot. v7 also runs on node24,
+        # which is what clears the Node 20 deprecation warning — v4 does not.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          # Full git history is needed to get a proper list of changed files
+          # within `super-linter`
+          fetch-depth: 0
+          # Nothing here pushes back to the repo, so leaving the token in
+          # .git/config would only widen what a compromised linter could reach.
+          persist-credentials: false
+
+      - name: Lint Code Base
+        # Pinned to a commit SHA (v8.7.0), same reasoning as above.
+        uses: super-linter/super-linter@4ce20838b8ab83717e78138c5b3a1407148e0918
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: "main"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # target/legacy/ holds the frozen pre-port bash implementation, kept
+          # only as a rollback path. Moving it made it a "changed file", which
+          # would run shellcheck over code we no longer maintain.
+          FILTER_REGEX_EXCLUDE: "target/legacy/.*"
+
+          # --- Linters deliberately turned off -------------------------------
+          # The executable bit is load-bearing here rather than incidental:
+          # setup_links symlinks exactly the executable files into ~/.local/bin,
+          # and aliases is sourced, so it must stay non-executable.
+          VALIDATE_BASH_EXEC: false
+          # shfmt is a formatter, not a correctness check — it wants every
+          # script reindented to tabs. shellcheck already covers correctness.
+          VALIDATE_SHELL_SHFMT: false
+          # Same category: prettier reformats YAML. yamllint still runs and
+          # checks this file for actual problems.
+          VALIDATE_YAML_PRETTIER: false
+          # Copy-paste detection over a repo of cheatsheets: the duplicated
+          # blocks it finds are install snippets repeated on purpose.
+          VALIDATE_JSCPD: false
+          # No JS/TS in this repo. Biome only fires because the Task Warrior
+          # checklists under common/content/check_lists are JSONL (one object
+          # per line, as `task import` expects) behind a .json extension.
+          VALIDATE_BIOME_LINT: false
+          VALIDATE_BIOME_FORMAT: false

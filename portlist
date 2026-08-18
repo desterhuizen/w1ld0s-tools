@@ -1,0 +1,1 @@
+grep open | awk -F"Ports: " '{print $2}' | awk -F"Ignored " '{print $1}' | sed 's/\/\/\/, /\n/g' | grep open | cut -d '/' -f 1 | xargs echo | tr " ", ","

