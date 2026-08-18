@@ -31,6 +31,20 @@ done
 unset _tf
 _target_source "${SOURCE_DIR}/engagement/attack/attacker"
 
+# Our own address on the engagement network. Four functions below used to
+# derive this by hand, each with its own ip/awk pipeline, while `attack` exists
+# precisely to record it -- so `attack tun0` had no effect on any of them.
+# Prefer what attack stored; fall back to reading the interface directly so the
+# functions still work before attack has ever been run.
+_my_ip() {
+    local dev="${1:-${A_DEV:-tun0}}"
+    if [ -n "$A_IP" ] && [ "$dev" = "${A_DEV:-tun0}" ]; then
+        echo "$A_IP"
+        return 0
+    fi
+    ip -4 addr show dev "$dev" 2>/dev/null | awk '/inet /{print $2}' | cut -d/ -f1
+}
+
 # Common paths (accessible as variables)
 export ROCKYOU="/usr/share/wordlists/rockyou.txt"
 
@@ -107,7 +121,7 @@ alias getwinpeas="wget https://github.com/peass-ng/PEASS-ng/releases/latest/down
 # JAVA TOOLS
 # =============================================================================
 
-alias ysorerial='/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar ${HOME}/tools/binaries/ysoserial/ysoserial.jar'
+alias ysoserial='/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar ${HOME}/tools/binaries/ysoserial/ysoserial.jar'
 
 # =============================================================================
 # NETWORKING UTILITIES
@@ -140,16 +154,17 @@ function ligolo-route() {
 # =============================================================================
 
 function rscp() {
-    ip=$(ip -4 addr show dev tun0 | grep inet | cut -d'/' -f1 | awk '{print $2}')
+    local ip
+    ip=$(_my_ip)
     scp -J "$ip" "$@"
 }
 
 function rssh() {
-    port=443
+    local port=443 ip
     if [ $# -ne 0 ]; then
         port="$1"
     fi
-    ip=$(ip -4 addr show dev tun0 | grep inet | cut -d'/' -f1 | awk '{print $2}')
+    ip=$(_my_ip)
     ssh "$ip" -p "$port"
 }
 
@@ -178,33 +193,36 @@ alias gc="git commit"
 # =============================================================================
 
 function httptools() {
-    dev='tun0'
-    if [ $# -ne 0 ]; then
-        dev="$1"
-    fi
-    SELF_IP=$(ip -br addr show | grep "$dev" | awk -F" " '{print $3}' | cut -d "/" -f1)
+    local dev="${1:-${A_DEV:-tun0}}" self_ip
+    self_ip=$(_my_ip "$dev")
     find /var/www/html/tools -maxdepth 1 -mindepth 1 -printf '%f\n' | sort |
-        awk -v ip="$SELF_IP" '{print "http://" ip "/tools/" $0}' | grep -Ev '[\./]$'
+        awk -v ip="$self_ip" '{print "http://" ip "/tools/" $0}' | grep -Ev '[\./]$'
 }
 
-function serve() {
-    port=80
-    dev=tun0
+# The peas directory update_peas writes to. Kept in one place: aliases and
+# update_peas disagreeing about it is how `serve peas` came to list an empty
+# directory.
+export PEAS_DIR="${HOME}/tools/binaries/peas"
 
-    if [[ "$2" == "eth0" || "$2" == "tun0" ]]; then
+function serve() {
+    # `local` is load-bearing: without it the assignment below overwrites the
+    # exported target $IP for the rest of the shell.
+    local port=80 dev="${A_DEV:-tun0}" self_ip
+
+    if [[ -n "$2" ]]; then
         dev="$2"
     fi
 
-    IP=$(ip -br addr show | grep "$dev" | awk -F" " '{print $3}' | cut -d "/" -f1)
+    self_ip=$(_my_ip "$dev")
 
-    if [[ $# -eq 1 ]]; then
+    if [[ $# -ge 1 ]]; then
         if [[ "$1" == "peas" ]]; then
-            find "${HOME}/tools/peas/" -maxdepth 1 -mindepth 1 -printf '%f\n' | sort |
-                while read -r peas_file; do echo "http://$IP/$peas_file"; done
-            python3 -m http.server "$port" --directory "${HOME}/tools/peas/"
-        else
-            port="$1"
+            find "$PEAS_DIR" -maxdepth 1 -mindepth 1 -printf '%f\n' | sort |
+                while read -r peas_file; do echo "http://$self_ip/$peas_file"; done
+            python3 -m http.server "$port" --directory "$PEAS_DIR"
+            return
         fi
+        port="$1"
     fi
 
     python3 -m http.server "$port"
@@ -249,6 +267,12 @@ function my_scan() {
     # directory -- it always failed, and $IP was whatever the shell started
     # with.)
     _target_source "${SOURCE_DIR}/engagement/target/config/targ.sh"
+    if [ $# -ne 0 ] && [ -z "$IP" ]; then
+        # Without this, every scan below ran nmap with an empty target
+        # argument, which it reads as a host it cannot resolve.
+        echo "my_scan: no target set -- run 'target <ip>' first" >&2
+        return 1
+    fi
     if [ $# -eq 0 ]; then
         echo "Scan 1:  sudo nmap -sS -Pn -oA top_ports \$IP"
         echo "Scan 2:  sudo nmap -sVC -n -O -Pn -oA top_ports_version -p <portlist> \$IP"
@@ -257,24 +281,28 @@ function my_scan() {
         echo "Scan 5:  sudo nmap --script vuln -p <portlist> -oA vuln_scan  \$IP"
         echo "Scan 6:  sudo nmap -sU -Pn -oA udp_ports \$IP"
     else
+        # Anything after the scan number is passed straight to nmap. Held in an
+        # array rather than "$2": a bare "$2" with nothing there handed nmap an
+        # empty argument, which it reads as a target it cannot resolve.
+        local extra=("${@:2}")
         if [[ "$1" == "1" ]]; then
-            echo "sudo nmap -sS -Pn -oA top_ports $IP $2"
-            sudo nmap -sS -Pn -oA top_ports "$IP" "$2"
+            echo "sudo nmap -sS -Pn -oA top_ports $IP ${extra[*]}"
+            sudo nmap -sS -Pn -oA top_ports "$IP" "${extra[@]}"
         elif [[ "$1" == "2" ]]; then
-            echo "sudo nmap -sVC -n -O -Pn -oA top_ports_version -p $(cat top_ports.gnmap | portlist) $IP $2"
-            sudo nmap -sVC -n -O -Pn -oA top_ports_version -p "$(cat top_ports.gnmap | portlist)" "$IP" "$2"
+            echo "sudo nmap -sVC -n -O -Pn -oA top_ports_version -p $(portlist < top_ports.gnmap) $IP ${extra[*]}"
+            sudo nmap -sVC -n -O -Pn -oA top_ports_version -p "$(portlist < top_ports.gnmap)" "$IP" "${extra[@]}"
         elif [[ "$1" == "3" ]]; then
-            echo "sudo nmap -sS -Pn -oA all_ports -p- --max-rtt-timeout=100ms $IP $2"
-            sudo nmap -sS -Pn -oA all_ports -p- "$IP" "$2"
+            echo "sudo nmap -sS -Pn -oA all_ports -p- --max-rtt-timeout=100ms $IP ${extra[*]}"
+            sudo nmap -sS -Pn -oA all_ports -p- "$IP" "${extra[@]}"
         elif [[ "$1" == "4" ]]; then
-            echo "sudo nmap -sVC -A -R -O -Pn -oA all_ports_version -p $(cat all_ports.gnmap | portlist) $IP $2"
-            sudo nmap -sVC -A -R -O -Pn -oA all_ports_version -p "$(cat all_ports.gnmap | portlist)" "$IP" "$2"
+            echo "sudo nmap -sVC -A -R -O -Pn -oA all_ports_version -p $(portlist < all_ports.gnmap) $IP ${extra[*]}"
+            sudo nmap -sVC -A -R -O -Pn -oA all_ports_version -p "$(portlist < all_ports.gnmap)" "$IP" "${extra[@]}"
         elif [[ "$1" == "5" ]]; then
-            echo "sudo nmap --script vuln -p $(cat top_ports.gnmap | portlist) $IP -oA vuln_scan $2"
-            sudo nmap --script vuln -p "$(cat top_ports.gnmap | portlist)" "$IP" -oA vuln_scan "$2"
+            echo "sudo nmap --script vuln -p $(portlist < top_ports.gnmap) $IP -oA vuln_scan ${extra[*]}"
+            sudo nmap --script vuln -p "$(portlist < top_ports.gnmap)" "$IP" -oA vuln_scan "${extra[@]}"
         elif [[ "$1" == "6" ]]; then
-            echo "sudo nmap -sU -Pn -oA udp_port $IP $2"
-            sudo nmap -sU -Pn -oA udp_port "$IP" "$2"
+            echo "sudo nmap -sU -Pn -oA udp_port $IP ${extra[*]}"
+            sudo nmap -sU -Pn -oA udp_port "$IP" "${extra[@]}"
         fi
     fi
 }
@@ -410,15 +438,15 @@ ntpdate-target() {
   # the Kerberos clock-skew workaround.
   dc-time-target() {
     local dc="$1" set_clock=0
-    [[ -z "$dc" ]] && { echo "usage: dc-time <dc> [--set]" >&2; return 2; }
+    [[ -z "$dc" ]] && { echo "usage: dc-time-target <dc> [--set]" >&2; return 2; }
     shift
     while (( $# )); do
       case "$1" in
         --set) set_clock=1 ;;
         -h|--help)
-          echo "usage: dc-time <dc> [--set]" >&2
+          echo "usage: dc-time-target <dc> [--set]" >&2
           return 0 ;;
-        *) echo "dc-time: unknown arg: $1" >&2; return 2 ;;
+        *) echo "dc-time-target: unknown arg: $1" >&2; return 2 ;;
       esac
       shift
     done
@@ -427,7 +455,7 @@ ntpdate-target() {
     ts=$(nmap -sT -p 445 --script smb-os-discovery "$dc" 2>/dev/null \
          | grep -oP 'System time:\s*\K\S+' | head -1)
     if [[ -z "$ts" ]]; then
-      echo "dc-time: no system time leaked from $dc — is SMB reachable?" >&2
+      echo "dc-time-target: no system time leaked from $dc — is SMB reachable?" >&2
       return 1
     fi
 
@@ -439,9 +467,9 @@ ntpdate-target() {
 
     # LDAP rootDSE returns currentTime as generalized time (YYYYMMDDHHMMSS.0Z),
   # always UTC. We convert to ISO before printing / `date -s`.
-  dc-time-taret-ldap() {
+  dc-time-target-ldap() {
     local dc="$1" set_clock=0 user="" pass=""
-    [[ -z "$dc" ]] && { echo "usage: dc-time-ldap <dc> [--set] [-u USER -p PASS]" >&2; return 2; }
+    [[ -z "$dc" ]] && { echo "usage: dc-time-target-ldap <dc> [--set] [-u USER -p PASS]" >&2; return 2; }
     shift
     while (( $# )); do
       case "$1" in
@@ -449,10 +477,10 @@ ntpdate-target() {
         -u|--user) user="$2"; shift ;;
         -p|--pass) pass="$2"; shift ;;
         -h|--help)
-          echo "usage: dc-time-ldap <dc> [--set] [-u USER -p PASS]" >&2
+          echo "usage: dc-time-target-ldap <dc> [--set] [-u USER -p PASS]" >&2
           echo "       anonymous query first; -u/-p when rootDSE is locked down" >&2
           return 0 ;;
-        *) echo "dc-time-ldap: unknown arg: $1" >&2; return 2 ;;
+        *) echo "dc-time-target-ldap: unknown arg: $1" >&2; return 2 ;;
       esac
       shift
     done
@@ -468,7 +496,7 @@ ntpdate-target() {
     local raw
     raw=$(ldapsearch "${ldargs[@]}" 2>/dev/null | awk '/^currentTime:/ {print $2}')
     if [[ -z "$raw" ]]; then
-      echo "dc-time-ldap: no currentTime — anonymous rootDSE blocked? Try -u/-p." >&2
+      echo "dc-time-target-ldap: no currentTime — anonymous rootDSE blocked? Try -u/-p." >&2
       return 1
     fi
 
