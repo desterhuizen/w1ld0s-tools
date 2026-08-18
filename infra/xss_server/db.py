@@ -132,7 +132,6 @@ if __name__ == "__main__":
             insert_content(conn, (args.location, args.content))
             conn.commit()
     elif (args.get):
-        print ('donkie')
         if args.id != -1:
             print("[+] Getting Content")
             print(get_content_by_id(conn, (args.id,)))
