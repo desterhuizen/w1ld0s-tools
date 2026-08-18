@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # ========================================================
-# AutoRecon - Automated Reconnaissance Script
-# Usage: ./autorecon.sh <domain>
+# recon_sweep - Automated external reconnaissance sweep
+# Usage: recon_sweep <domain>
 # ========================================================
 
 # Color definitions
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 print_banner() {
     echo -e "${BLUE}"
     echo "╔═══════════════════════════════════════════╗"
-    echo "║               AutoRecon                   ║"
+    echo "║                Recon Sweep                ║"
     echo "╚═══════════════════════════════════════════╝"
     echo -e "${NC}"
 }
@@ -48,8 +48,8 @@ check_tool() {
 # Check if domain is provided
 if [ -z "$1" ]; then
     print_banner
-    echo "Usage: autorecon.sh <domain>"
-    echo "Example: autorecon.sh example.com"
+    echo "Usage: recon_sweep <domain>"
+    echo "Example: recon_sweep example.com"
     exit 1
 fi
 
@@ -159,7 +159,7 @@ fi
 
 # Generate summary report
 log_info "Generating summary report"
-echo "# AutoRecon Summary Report for $url" > "$output_dir/summary.md"
+echo "# Recon Sweep Summary Report for $url" > "$output_dir/summary.md"
 {
   echo "Generated on: $(date)"
   echo ""
