@@ -1,10 +1,10 @@
 __pycache__
 # Whole directory: engagement state (*.sh), config.toml and config.legacy.sh
-# all live here. The tracked notes template lives in target/templates/.
-target/config/
+# all live here. The tracked notes template lives in engagement/target/templates/.
+engagement/target/config/
 # The frozen bash creates its own config/ next to itself when run for rollback.
-target/legacy/config/
-attack/attacker
+engagement/target/legacy/config/
+engagement/attack/attacker
 
 # Local agent notes — deliberately untracked.
 CLAUDE.md

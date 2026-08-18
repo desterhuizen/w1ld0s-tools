@@ -54,41 +54,38 @@ function show_by_category() {
     echo -e "${GREEN}=  PENETRATION TESTING SCRIPTS BY CATEGORY      =${NC}"
     echo -e "${GREEN}=================================================${NC}"
 
-    # Core Tools
+    # One category per top-level directory, so this list cannot drift from the
+    # tree the way the old hand-maintained mapping did. Runtime state
+    # (engagement/*/config, attack/attacker) and the frozen legacy bash are
+    # filtered out -- they are not tools.
+
+    # Core Tools -- the commands that live at the repo root
     echo -e "\n${YELLOW}=== CORE TOOLS ===${NC}"
-    find "$SCRIPT_DIR" -maxdepth 1 -type f -not -path "*/\.*" | grep -v "README.md\|scriptlist\|setup_" | sort | grep -i "$search_term" || true
+    find "$SCRIPT_DIR" -maxdepth 1 -type f -not -path "*/\.*" | grep -v "README.md\|LICENSE\|NOTICE\|CLAUDE" | sort | grep -i "$search_term" || true
 
-    # Target Management
-    echo -e "\n${YELLOW}=== TARGET MANAGEMENT ===${NC}"
-    find "$SCRIPT_DIR/target" -type f -not -path "*/\.*" -not -path "*/legacy/*" -not -path "*/config/*" | sort | grep -i "$search_term" || true
-
-    # Attack Management
-    echo -e "\n${YELLOW}=== ATTACK MANAGEMENT ===${NC}"
-    find "$SCRIPT_DIR/attack" -type f -not -path "*/\.*" | sort | grep -i "$search_term" || true
+    # Engagement State
+    echo -e "\n${YELLOW}=== ENGAGEMENT STATE ===${NC}"
+    find "$SCRIPT_DIR/engagement" -type f -not -path "*/\.*" -not -path "*/legacy/*" -not -path "*/config/*" -not -name "attacker" 2>/dev/null | sort | grep -i "$search_term" || true
 
     # Scanning and Enumeration
-    echo -e "\n${YELLOW}=== SCANNING & ENUMERATION ===${NC}"
-    find "$SCRIPT_DIR/enum_scripts" "$SCRIPT_DIR/autorecon" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+    echo -e "\n${YELLOW}=== RECON ===${NC}"
+    find "$SCRIPT_DIR/recon" -type f -not -path "*/\.*" -not -path "*/screenshots/*" 2>/dev/null | sort | grep -i "$search_term" || true
 
-    # Exploitation
-    echo -e "\n${YELLOW}=== EXPLOITATION ===${NC}"
-    find "$SCRIPT_DIR/payloads" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+    # Payloads, handlers and transfer
+    echo -e "\n${YELLOW}=== ACCESS ===${NC}"
+    find "$SCRIPT_DIR/access" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
 
-    # Post-Exploitation
-    echo -e "\n${YELLOW}=== POST-EXPLOITATION ===${NC}"
-    find "$SCRIPT_DIR/footholder" "$SCRIPT_DIR/powershell" "$SCRIPT_DIR/log_analysis" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+    # Attacker-side services
+    echo -e "\n${YELLOW}=== INFRASTRUCTURE ===${NC}"
+    find "$SCRIPT_DIR/infra" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
 
-    # Web Tools
-    echo -e "\n${YELLOW}=== WEB TOOLS ===${NC}"
-    find "$SCRIPT_DIR/web_scan" "$SCRIPT_DIR/simple_wp_plugin" "$SCRIPT_DIR/webserver" "$SCRIPT_DIR/xss_server" "$SCRIPT_DIR/simple_sqlite_db" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+    # Windows and AD
+    echo -e "\n${YELLOW}=== WINDOWS ===${NC}"
+    find "$SCRIPT_DIR/windows" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
 
-    # Metasploit Scripts
-    echo -e "\n${YELLOW}=== METASPLOIT SCRIPTS ===${NC}"
-    find "$SCRIPT_DIR/msf_scripts" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
-
-    # Windows Domain Tools
-    echo -e "\n${YELLOW}=== WINDOWS DOMAIN TOOLS ===${NC}"
-    find "$SCRIPT_DIR/windows_domain" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
+    # Cheatsheets and checklists
+    echo -e "\n${YELLOW}=== DOCS ===${NC}"
+    find "$SCRIPT_DIR/docs" -type f -not -path "*/\.*" 2>/dev/null | sort | grep -i "$search_term" || true
 
     echo -e "${GREEN}=================================================${NC}"
 }

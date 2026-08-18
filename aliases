@@ -26,10 +26,10 @@ SOURCE_DIR="${W1LD0S_TOOLS_DIR:-${HOME}/tools/repos/w1ld0s-tools}"
 # shellcheck source=/dev/null  # path is runtime-determined
 _target_source() { [ -r "$1" ] && . "$1"; return 0; }
 for _tf in targ base name lab vpn; do
-    _target_source "${SOURCE_DIR}/target/config/${_tf}.sh"
+    _target_source "${SOURCE_DIR}/engagement/target/config/${_tf}.sh"
 done
 unset _tf
-_target_source "${SOURCE_DIR}/attack/attacker"
+_target_source "${SOURCE_DIR}/engagement/attack/attacker"
 
 # Common paths (accessible as variables)
 export ROCKYOU="/usr/share/wordlists/rockyou.txt"
@@ -248,7 +248,7 @@ function my_scan() {
     # up here. (This used to source "${SOURCE_DIR}/target", which is a
     # directory -- it always failed, and $IP was whatever the shell started
     # with.)
-    _target_source "${SOURCE_DIR}/target/config/targ.sh"
+    _target_source "${SOURCE_DIR}/engagement/target/config/targ.sh"
     if [ $# -eq 0 ]; then
         echo "Scan 1:  sudo nmap -sS -Pn -oA top_ports \$IP"
         echo "Scan 2:  sudo nmap -sVC -n -O -Pn -oA top_ports_version -p <portlist> \$IP"

@@ -44,10 +44,11 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # target/legacy/ holds the frozen pre-port bash implementation, kept
-          # only as a rollback path. Moving it made it a "changed file", which
-          # would run shellcheck over code we no longer maintain.
-          FILTER_REGEX_EXCLUDE: "target/legacy/.*"
+          # engagement/target/legacy/ holds the frozen pre-port bash
+          # implementation, kept only as a rollback path. Moving it made it a
+          # "changed file", which would run shellcheck over code we no longer
+          # maintain.
+          FILTER_REGEX_EXCLUDE: "engagement/target/legacy/.*"
 
           # --- Linters deliberately turned off -------------------------------
           # The executable bit is load-bearing here rather than incidental:

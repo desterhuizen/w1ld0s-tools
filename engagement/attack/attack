@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Constants
-ATTACKER_HOME="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/attack"
+ATTACKER_HOME="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/engagement/attack"
 ATTACKER_CONFIG="$ATTACKER_HOME/attacker"
 DEVICES=$(nmcli -c no -f device c 2>/dev/null | grep -v DEVICE || ifconfig | grep -o '^[a-z0-9]\+' | grep -v '^lo')
 
