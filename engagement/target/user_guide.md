@@ -121,7 +121,7 @@ or
 target --vpn /path/to/vpn
 ```
 
-Running `target -v` with no argument prints the currently configured VPN directory. If the directory doesn't exist you'll be prompted to create it. The path is persisted to `target/config/vpn.sh` as `TARGET_VPN`.
+Running `target -v` with no argument prints the currently configured VPN directory. If the directory doesn't exist you'll be prompted to create it. The path is persisted to `engagement/target/config/vpn.sh` as `TARGET_VPN`.
 
 ### Changing to the VPN Directory
 
@@ -145,7 +145,7 @@ For multi-host environments (e.g. HTB Pro Labs like Dante, or any engagement wit
 target -L dante
 ```
 
-`-L` (or `--lab`) accepts `-N` / `--network` as synonyms. Setting a lab persists `TARGET_LAB` to `target/config/lab.sh` and offers to scaffold the lab root. Running `target -L` with no argument prints the current lab.
+`-L` (or `--lab`) accepts `-N` / `--network` as synonyms. Setting a lab persists `TARGET_LAB` to `engagement/target/config/lab.sh` and offers to scaffold the lab root. Running `target -L` with no argument prints the current lab.
 
 With a lab set, project paths become nested:
 
@@ -300,7 +300,7 @@ If `notes.md` is missing, or you have renamed one of the `## N.` headings, `targ
 
 ### Customizing the template
 
-The template is `target/templates/host-notes.md`. Edit it freely — the placeholders `{{HOST}}`, `{{IP}}`, `{{URL}}`, `{{LAB}}`, `{{VPN}}` and `{{DATE}}` are substituted at creation. Anything else, including shell `$` and `${...}`, is left alone.
+The template is `engagement/target/templates/host-notes.md`. Edit it freely — the placeholders `{{HOST}}`, `{{IP}}`, `{{URL}}`, `{{LAB}}`, `{{VPN}}` and `{{DATE}}` are substituted at creation. Anything else, including shell `$` and `${...}`, is left alone.
 
 Keep the `## N.` headings intact, or the append commands cannot find their sections.
 
@@ -389,7 +389,7 @@ target -L -
 
 ## Tips and Tricks
 
-1. **Custom Project Structure**: Edit `target/config/config.toml` to customize the default project structure — see `install.md` for the schema. (This used to be a bash `config.sh`; it is migrated automatically on first run.)
+1. **Custom Project Structure**: Edit `engagement/target/config/config.toml` to customize the default project structure — see `setup.md` for the schema. (This used to be a bash `config.sh`; it is migrated automatically on first run.)
 
 2. **Shell Integration**: The `-c`, `-cb`, `-cv` and `-cl` options launch a new shell in the target directory. When you exit this shell, you'll return to your previous location.
 

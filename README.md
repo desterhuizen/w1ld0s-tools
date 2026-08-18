@@ -56,6 +56,12 @@ the repo findable.
 | `windows/` | Windows and AD tooling: `powershell/`, `windows_domain/`, `users/`, `log_analysis/`. Cuts across the phases above, by design. |
 | `docs/` | `common` renders the offline cheatsheets under `docs/common/content/` (AD, web, bof, wifi, log evasion, …) through `glow`. `docs/checklists/` holds the longer-form ones. |
 
+Checklists exist in three forms on purpose, because they are used at different
+moments: `docs/common/content/check_lists/*.json` are Taskwarrior imports for tracking
+a live engagement (`common -t win_priv`), `docs/common/content/web_checklist.md` is the
+long OWASP reference you read, and `docs/checklists/` holds the standalone HTML page
+you tick through in a browser.
+
 At the root: `aliases` — the shell surface, `$IP` and friends plus the functions that use
 them (`my_scan`, `htricks`, `gtfo`, `serve`, …); source it, don't execute it.
 `scriptlist` enumerates everything above with descriptions — start there. `setup_links`
