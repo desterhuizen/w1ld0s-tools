@@ -31,23 +31,38 @@ why `aliases` is mode `0644`.
 Cloning elsewhere is fine — export `W1LD0S_TOOLS_DIR` to point at the checkout and
 `aliases`, `attack`, `common` and `scriptlist` all follow it.
 
+Upgrading from the flat layout: the per-engagement state is gitignored, so it stays
+behind at the old paths. Move it once, then re-link:
+
+```bash
+cd "${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}"
+[ -d target/config ] && mv target/config engagement/target/config
+[ -f attack/attacker ] && mv attack/attacker engagement/attack/attacker
+./setup_links -d && ./setup_links
+```
+
 ## What's here
+
+Six directories, named for the phase of work they serve. Nesting is invisible to the
+commands themselves — `setup_links` publishes by basename — so it exists purely to make
+the repo findable.
 
 | | |
 |---|---|
-| `target/` | Per-engagement state. `target 10.10.11.42` writes `target/config/*.sh`; `aliases` sources them at shell startup so `$IP`, `$TARGET_BASE`, `$TARGET_NAME`, `$TARGET_LAB`, `$TARGET_VPN` are live in every shell. |
-| `attack/` | The other half of that state — your own address per interface, for reverse shells and payload templates. |
-| `aliases` | The shell surface: `$IP` and friends, plus the aliases and functions that use them (`my_scan`, `htricks`, `gtfo`, `getlinpeas`, …). Source it; don't execute it. |
-| `common/` | `common` renders the offline cheatsheets under `common/content/` (AD, web, bof, wifi, log evasion, …) through `glow`. |
-| `enum_scripts/`, `web_scan/`, `autorecon/` | Enumeration and scanning wrappers. |
-| `payloads/`, `footholder/`, `msf_scripts/`, `xfer_cmd/`, `xss_server/`, `webserver/` | Foothold and delivery helpers. |
-| `powershell/`, `windows_domain/`, `users/` | Windows and AD tooling. |
-| `checklists/`, `log_analysis/`, `simple_sqlite_db/`, `simple_wp_plugin/` | Supporting odds and ends. |
-| `scriptlist` | Enumerates everything above with descriptions. Start here. |
-| `setup_workspace` | Builds the tmux/terminator/i3 layout for an engagement, with full pane logging. |
+| `engagement/` | Per-engagement state. `target 10.10.11.42` writes `engagement/target/config/*.sh`; `aliases` sources them at shell startup so `$IP`, `$TARGET_BASE`, `$TARGET_NAME`, `$TARGET_LAB`, `$TARGET_VPN` are live in every shell. `attack` is the other half — your own address per interface. `setup_workspace` builds the tmux/i3 layout, with full pane logging. |
+| `recon/` | Enumeration and scanning: `port_scan.sh`, `pingsweep.sh`, `enumcert`, `portlist`, plus the `autorecon/` and `web_scan/` wrappers. |
+| `access/` | Getting a shell: `payloads/`, `footholder/`, `msf_scripts/`, `xfer_cmd/`, macro tooling. |
+| `infra/` | Attacker-side services you stand up: `webserver/`, `xss_server/`, `simple_wp_plugin/`, `rsh_server`, `setup_www_tools`. |
+| `windows/` | Windows and AD tooling: `powershell/`, `windows_domain/`, `users/`, `log_analysis/`. Cuts across the phases above, by design. |
+| `docs/` | `common` renders the offline cheatsheets under `docs/common/content/` (AD, web, bof, wifi, log evasion, …) through `glow`. `docs/checklists/` holds the longer-form ones. |
 
-Runtime state (`target/config/`, `attack/attacker`) is gitignored — it is per-engagement
-and never belongs in the repo.
+At the root: `aliases` — the shell surface, `$IP` and friends plus the functions that use
+them (`my_scan`, `htricks`, `gtfo`, `serve`, …); source it, don't execute it.
+`scriptlist` enumerates everything above with descriptions — start there. `setup_links`
+publishes the executables.
+
+Runtime state (`engagement/target/config/`, `engagement/attack/attacker`) is gitignored —
+it is per-engagement and never belongs in the repo.
 
 ## Requirements
 
