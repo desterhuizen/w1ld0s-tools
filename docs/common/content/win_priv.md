@@ -80,8 +80,8 @@ net start <name>
 - Insecure Service Properties
 - Unquoted Service Path
 - Weak Registry Permissions
-    - `Get-Acl HKLM:\System\CurrentControlSet\Services\regsvc | Format-List`
-    - `./accesschk.exe /accepteula -uvwqk HKLM\System\CurrentControlSet\Services\regsvc`
+  - `Get-Acl HKLM:\System\CurrentControlSet\Services\regsvc | Format-List`
+  - `./accesschk.exe /accepteula -uvwqk HKLM\System\CurrentControlSet\Services\regsvc`
 - Insecure Service Executables
 - DLL Hijacking (use procmon to check file accesses, look for missing DLLs)
 

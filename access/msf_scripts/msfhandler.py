@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import subprocess
 
 def generate_resource_script(lhost, lport, architecture, payload_type, os_type, protocol):
     """
@@ -44,8 +43,10 @@ def main():
     # Generate the resource script as a string
     resource_script = generate_resource_script(args.lhost, args.lport, args.architecture, args.type, args.os, args.protocol)
 
-    # Launch msfconsole and pass the resource script via stdin
-    print("Launching msfconsole...")
+    # Print the command rather than running it, so it can be reviewed, edited
+    # and pasted. (subprocess was imported for a launch that was never
+    # implemented.)
+    print("Run:")
     print(' '.join(["msfconsole", "-q", "-x", resource_script]))
 
 if __name__ == "__main__":

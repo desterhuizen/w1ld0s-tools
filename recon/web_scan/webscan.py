@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import re
 
@@ -19,7 +20,7 @@ def scan_sites(site_list):
             path = os.getcwd() + '/screenshots/' + site.replace('/', '').replace(':', '_').replace('.', '_') + ".png"
             print('Writing:' + path)
             driver.save_screenshot(path)
-        except:
+        except Exception:
             print('Ignoring: ' + site)
 
     # 4. close the web driver
@@ -33,9 +34,9 @@ def load_site_list(path):
     for site in sites:
         # We remove any invalid URIs
         if re.search(
-                '^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$',
+                r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$',
                 site):
-            if not re.search('^(http:\/\/|https:\/\/)',site):
+            if not re.search(r'^(http:\/\/|https:\/\/)',site):
                 site = 'https://'+site
             clean_list.append(site.rstrip('\n'))
     return clean_list

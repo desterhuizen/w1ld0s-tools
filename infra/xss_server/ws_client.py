@@ -26,9 +26,6 @@ def on_close(ws):
 def on_message(ws, message):
     mes = json.loads(message)
 
-    if "uniqid" in mes.keys():
-        uniqid = mes["uniqid"]
-
     if mes["type"] == "connection":
         print("[+] Connected!")
     elif mes["type"] == "dispatcher":

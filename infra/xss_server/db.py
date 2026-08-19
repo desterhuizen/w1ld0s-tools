@@ -1,6 +1,5 @@
 import sqlite3
 import argparse
-import os
 
 def create_connection(db_file):
     conn = None
@@ -46,7 +45,6 @@ def insert_content(conn, newEntryData):
 
 def get_locations(conn):
     selectAll='SELECT id, location FROM content'
-    contentList = ('-'*150)+'\n'
     try:
         c = conn.cursor()
         c.execute(selectAll)
@@ -132,7 +130,6 @@ if __name__ == "__main__":
             insert_content(conn, (args.location, args.content))
             conn.commit()
     elif (args.get):
-        print ('donkie')
         if args.id != -1:
             print("[+] Getting Content")
             print(get_content_by_id(conn, (args.id,)))

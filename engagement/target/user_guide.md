@@ -13,7 +13,7 @@ target
 ```
 
 Output example:
-```
+```text
 Target Base    : /home/user/pentest-projects
 Target Name    : client-x
 Target IP      : 192.168.1.1
@@ -121,7 +121,7 @@ or
 target --vpn /path/to/vpn
 ```
 
-Running `target -v` with no argument prints the currently configured VPN directory. If the directory doesn't exist you'll be prompted to create it. The path is persisted to `target/config/vpn.sh` as `TARGET_VPN`.
+Running `target -v` with no argument prints the currently configured VPN directory. If the directory doesn't exist you'll be prompted to create it. The path is persisted to `engagement/target/config/vpn.sh` as `TARGET_VPN`.
 
 ### Changing to the VPN Directory
 
@@ -145,11 +145,11 @@ For multi-host environments (e.g. HTB Pro Labs like Dante, or any engagement wit
 target -L dante
 ```
 
-`-L` (or `--lab`) accepts `-N` / `--network` as synonyms. Setting a lab persists `TARGET_LAB` to `target/config/lab.sh` and offers to scaffold the lab root. Running `target -L` with no argument prints the current lab.
+`-L` (or `--lab`) accepts `-N` / `--network` as synonyms. Setting a lab persists `TARGET_LAB` to `engagement/target/config/lab.sh` and offers to scaffold the lab root. Running `target -L` with no argument prints the current lab.
 
 With a lab set, project paths become nested:
 
-```
+```text
 ${TARGET_BASE}/${LAB}/${HOST}      e.g. ~/pentest-projects/dante/host-01
 ```
 
@@ -159,7 +159,7 @@ With no lab set, paths stay flat (`${TARGET_BASE}/${HOST}`) exactly as before �
 
 Scaffolding a lab creates shared, cross-host resources at the lab root:
 
-```
+```text
 dante/
 ├── README.md           # Lab overview
 ├── network.md          # Host inventory / network map (fill in as you enumerate)
@@ -230,7 +230,7 @@ target --help
 
 When you create a new project with `target -m`, the following structure is created:
 
-```
+```text
 project_name/
 ├── README.md           # Project documentation (write-if-absent)
 ├── notes.md            # Structured enumeration notes (see below)
@@ -264,13 +264,13 @@ Nothing in the script enforces this. It is a written artifact, and the enforceme
 
 ### The sections
 
-| Section | Holds | Discipline |
-|---|---|---|
-| **0. Rules** | Tick-box enumeration rules | Tick these before writing anything in section 3 |
-| **1. Facts** | Ports, versions, hostnames, usernames, emails, paths, tech stack, odd HTTP headers | Verbatim only. What the box literally told you. No interpretation |
-| **2. Anomalies** | Deviations from a default install | A stock nginx page is not an anomaly. A stock nginx page serving `/backup/` is |
-| **3. Hypotheses** | anomaly → candidate attack path → what would prove or kill it | Nothing here that is not traceable to a line in section 2 |
-| **4. Tried / failed** | What you tried and **why** it failed | "Didn't work" is not a reason. The reason is what stops you repeating it at hour six |
+| Section               | Holds                                                                              | Discipline                                                                           |
+| --------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **0. Rules**          | Tick-box enumeration rules                                                         | Tick these before writing anything in section 3                                      |
+| **1. Facts**          | Ports, versions, hostnames, usernames, emails, paths, tech stack, odd HTTP headers | Verbatim only. What the box literally told you. No interpretation                    |
+| **2. Anomalies**      | Deviations from a default install                                                  | A stock nginx page is not an anomaly. A stock nginx page serving `/backup/` is       |
+| **3. Hypotheses**     | anomaly → candidate attack path → what would prove or kill it                      | Nothing here that is not traceable to a line in section 2                            |
+| **4. Tried / failed** | What you tried and **why** it failed                                               | "Didn't work" is not a reason. The reason is what stops you repeating it at hour six |
 
 Section 0 carries the rules that catch the usual misses — full `-p-` before any `-sCV`, every hostname into `/etc/hosts` and then vhost-fuzzed, page source and every JS file read by hand before any directory brute force, and a fresh enumeration pass after **every** credential found.
 
@@ -300,7 +300,7 @@ If `notes.md` is missing, or you have renamed one of the `## N.` headings, `targ
 
 ### Customizing the template
 
-The template is `target/templates/host-notes.md`. Edit it freely — the placeholders `{{HOST}}`, `{{IP}}`, `{{URL}}`, `{{LAB}}`, `{{VPN}}` and `{{DATE}}` are substituted at creation. Anything else, including shell `$` and `${...}`, is left alone.
+The template is `engagement/target/templates/host-notes.md`. Edit it freely — the placeholders `{{HOST}}`, `{{IP}}`, `{{URL}}`, `{{LAB}}`, `{{VPN}}` and `{{DATE}}` are substituted at creation. Anything else, including shell `$` and `${...}`, is left alone.
 
 Keep the `## N.` headings intact, or the append commands cannot find their sections.
 
@@ -308,7 +308,7 @@ Keep the `## N.` headings intact, or the append commands cannot find their secti
 
 `aliases` sources the state files at shell startup, which exports:
 
-```
+```text
 $IP  $URL  $TARGET_BASE  $TARGET_NAME  $TARGET_LAB  $TARGET_VPN
 ```
 
@@ -389,7 +389,7 @@ target -L -
 
 ## Tips and Tricks
 
-1. **Custom Project Structure**: Edit `target/config/config.toml` to customize the default project structure — see `install.md` for the schema. (This used to be a bash `config.sh`; it is migrated automatically on first run.)
+1. **Custom Project Structure**: Edit `engagement/target/config/config.toml` to customize the default project structure — see `setup.md` for the schema. (This used to be a bash `config.sh`; it is migrated automatically on first run.)
 
 2. **Shell Integration**: The `-c`, `-cb`, `-cv` and `-cl` options launch a new shell in the target directory. When you exit this shell, you'll return to your previous location.
 

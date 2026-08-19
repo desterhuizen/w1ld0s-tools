@@ -98,37 +98,67 @@ function show_details() {
     echo -e "${GREEN}=  SCRIPT DETAILS                               =${NC}"
     echo -e "${GREEN}=================================================${NC}"
 
+    # Names in CYAN are the command as published by setup_links -- basename
+    # with the extension stripped. Where the file on disk differs, it is given
+    # after the description.
+
     # Core Scripts
-    echo -e "\n${YELLOW}CORE SCRIPTS:${NC}"
-    echo -e "${CYAN}aliases${NC} - Collection of useful penetration testing aliases and functions"
-    echo -e "${CYAN}portlist${NC} - Extract port lists from nmap scan files"
-    echo -e "${CYAN}macro_formatter${NC} - Format macros for Office documents"
+    echo -e "\n${YELLOW}CORE:${NC}"
+    echo -e "${CYAN}aliases${NC} - The shell surface: \$IP and friends, plus the functions that use them. Sourced, not run"
+    echo -e "${CYAN}scriptlist${NC} - This list"
+    echo -e "${CYAN}setup_links${NC} - Symlink every executable in the repo into ~/.local/bin (-d to remove)"
 
-    # Target Management
-    echo -e "\n${YELLOW}TARGET MANAGEMENT:${NC}"
+    # Engagement State
+    echo -e "\n${YELLOW}ENGAGEMENT STATE:${NC}"
     echo -e "${CYAN}target${NC} - Manage pentest project dirs, target state, and structured host notes (-F/-A/-H/-X)"
-
-    # Attack Management
-    echo -e "\n${YELLOW}ATTACK MANAGEMENT:${NC}"
-    echo -e "${CYAN}attack${NC} - Manage attack infrastructure and payloads"
+    echo -e "${CYAN}attack${NC} - Record your own interface and IP for the engagement (exports \$A_IP/\$A_DEV)"
+    echo -e "${CYAN}setup_workspace${NC} - Build the tmux/i3 layout for the current target, with full pane logging"
 
     # Enumeration
-    echo -e "\n${YELLOW}SCANNING & ENUMERATION:${NC}"
-    echo -e "${CYAN}autorecon.sh${NC} - Automated reconnaissance script"
-    echo -e "${CYAN}basic_enum.ps1/sh${NC} - Basic system enumeration for Windows/Linux"
-    echo -e "${CYAN}port_scan.sh${NC} - Port scanning utility"
-    echo -e "${CYAN}ssh-username-enum.py${NC} - SSH username enumeration tool"
+    echo -e "\n${YELLOW}RECON:${NC}"
+    echo -e "${CYAN}recon_sweep${NC} - External sweep over a domain: subdomains, screenshots, ports, vulns (recon_sweep.sh)"
+    echo -e "${CYAN}port_scan${NC} - Bash /dev/tcp port scanner, no nmap needed (port_scan.sh)"
+    echo -e "${CYAN}pingsweep${NC} - Sweep a range for live hosts (pingsweep.sh)"
+    echo -e "${CYAN}enumcert${NC} - Dump a host TLS certificate; -l lists just the DNS names"
+    echo -e "${CYAN}portlist${NC} - Turn an nmap .gnmap into a comma-separated port list. Used by my_scan"
+    echo -e "${CYAN}run_all${NC} - Chain nmap, gobuster, nikto and enum4linux against one IP (run_all.sh)"
+    echo -e "${CYAN}basic_portscan_bash${NC} - Emit a self-contained scanner to paste on a target"
+    echo -e "${CYAN}ssh-username-enum${NC} - SSH username enumeration (ssh-username-enum.py)"
+    echo -e "${CYAN}webscan${NC} - Screenshot a list of web targets with headless Chrome (web_scan/webscan.py)"
+    echo -e "${CYAN}webcmd${NC} - Send URL-encoded commands to a command-injection endpoint (web_scan/webcmd)"
+    echo -e "        ${NC}not published: basic_enum.sh / basic_enum.ps1 -- upload and run these on the target"
 
-    # Exploitation
-    echo -e "\n${YELLOW}EXPLOITATION:${NC}"
-    echo -e "${CYAN}base_exploit.py${NC} - Python template for exploit development"
+    # Access
+    echo -e "\n${YELLOW}ACCESS:${NC}"
+    echo -e "${CYAN}xfer_cmd${NC} - Generate scripted copy commands for Windows and Linux (xfer_cmd/xfer_cmd.py)"
+    echo -e "${CYAN}msfhandler${NC} - Generate an msfconsole handler from LHOST/LPORT/arch/OS/protocol (msf_scripts/msfhandler.py)"
+    echo -e "${CYAN}shell_upgrade${NC} - Upgrade a dumb shell to a fully interactive TTY (footholder/shell_upgrade)"
+    echo -e "${CYAN}macro_formatter${NC} - Format a macro for embedding in an Office document"
+    echo -e "${CYAN}check_macro${NC} - Verify the filename check baked into a macro doc, via olevba (check_macro.sh)"
+    echo -e "${CYAN}create_proxy${NC} / ${CYAN}generate_phase0${NC} - Build the proxy stub and first-stage dropper"
+    echo -e "        ${NC}msf_scripts/*.rc - ready-made handlers; see msf_scripts/README.md"
 
-    # Post Exploitation
-    echo -e "\n${YELLOW}POST-EXPLOITATION:${NC}"
-    echo -e "${CYAN}footholder/footholder.ps1/.sh${NC} - Foothold maintenance scripts"
-    echo -e "${CYAN}footholder/shell_upgrade${NC} - Upgrade simple shells to fully interactive TTYs"
-    echo -e "${CYAN}powershell/Spray-Passwords.ps1${NC} - Password spraying tool"
-    echo -e "${CYAN}log_analysis/log_search.psm1${NC} - PowerShell module for log analysis"
+    # Infrastructure
+    echo -e "\n${YELLOW}INFRASTRUCTURE:${NC}"
+    echo -e "${CYAN}httpserve${NC} - Flask callback server: catches and logs exfil/callbacks to sqlite (webserver/httpserve.py)"
+    echo -e "${CYAN}setup_www_tools${NC} - Stage the usual Windows tooling into /var/www/html/tools"
+    echo -e "${CYAN}update_peas${NC} - Refresh the linPEAS/winPEAS binaries in \$PEAS_DIR (update_peas.sh)"
+    echo -e "${CYAN}rsh_server${NC} - Start the reverse-ssh server"
+    echo -e "${CYAN}setup_flask_server${NC} - Generate the cert the XSS collection server needs (xss_server/)"
+
+    # Windows
+    echo -e "\n${YELLOW}WINDOWS:${NC}"
+    echo -e "${CYAN}add_rroot${NC} - Add a UID 0 account on Linux (users/add_rroot.sh)"
+    echo -e "        ${NC}powershell/Spray-Passwords.ps1 - password spraying against a domain"
+    echo -e "        ${NC}powershell/switchTo64.ps1 - re-launch a 32-bit PowerShell as 64-bit"
+    echo -e "        ${NC}windows_domain/domainsetup.ps1 - stand up a lab domain controller"
+    echo -e "        ${NC}log_analysis/log_search.psm1 - search Windows event logs"
+
+    # Docs
+    echo -e "\n${YELLOW}DOCS:${NC}"
+    echo -e "${CYAN}common${NC} - Render the offline cheatsheets through glow. 'common' alone lists them"
+    echo -e "        ${NC}common -t <name> imports a checklist into Taskwarrior"
+    echo -e "        ${NC}docs/checklists/ - the longer-form checklists, in markdown and as a standalone page"
 
     echo -e "${GREEN}=================================================${NC}"
     echo -e "For full details, see the README.md file."
@@ -148,9 +178,9 @@ function show_standard_list() {
     echo -e "${GREEN}=================================================${NC}"
 
     if [ -z "$search_term" ]; then
-        tree --noreport -I "README.md" -I "scriptlist" -I "venv" -I "attacker" -I "target" -I "setup_links" "$SCRIPT_DIR/" "${tree_opts[@]}"
+        tree --noreport -I "README.md" -I "scriptlist" -I "venv" -I "attacker" -I "config" -I "setup_links" -I "legacy" "$SCRIPT_DIR/" "${tree_opts[@]}"
     else
-        tree --noreport -I "README.md" -I "scriptlist" -I "venv" -I "attacker" -I "target" -I "setup_links" "$SCRIPT_DIR/" "${tree_opts[@]}" | grep -i --color=always "$search_term"
+        tree --noreport -I "README.md" -I "scriptlist" -I "venv" -I "attacker" -I "config" -I "setup_links" -I "legacy" "$SCRIPT_DIR/" "${tree_opts[@]}" | grep -i --color=always "$search_term"
     fi
 
     echo -e "${GREEN}=================================================${NC}"

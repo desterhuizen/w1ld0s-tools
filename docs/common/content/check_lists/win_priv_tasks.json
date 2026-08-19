@@ -39,7 +39,7 @@
 {"project":"Applications","description":"Startup Applications", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#run-at-startup"}
 {"project":"Applications","description":"Vulnerable Drivers", "link":"https://book.hacktricks.xyz/pentesting-web/windows-local-privilege-escalation/#drivers"}
 {"project":"DLL Hijacking","description":"Can you write in any folder inside PATH?"}
-{"project":"DLL Hijacking","description":"Is there any known service binary that tries to load any non-existant DLL?"}
+{"project":"DLL Hijacking","description":"Is there any known service binary that tries to load any non-existent DLL?"}
 {"project":"DLL Hijacking","description":"Can you write in any binaries folder?"}
 {"project":"Network","description":"Enumerate the network (shares, interfaces, routes, neighbours, ..."}
 {"project":"Network","description":"Take a special look at network services listening on localhost (127.0.0.1"}
