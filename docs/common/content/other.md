@@ -40,7 +40,7 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lo
 ### Vi/Vim Search and Replace
 
 | Action                       | Command       | Description                                        |
-|------------------------------|---------------|----------------------------------------------------|
+| ------------------------------ | --------------- | ---------------------------------------------------- |
 | Replace spaces with colons   | `%s/\s\+/:/g` | Converts all whitespace sequences to single colons |
 | Replace colons with newlines | `%s/:/\r/g`   | Splits colon-delimited text into multiple lines    |
 

@@ -48,7 +48,7 @@ commands themselves — `setup_links` publishes by basename — so it exists pur
 the repo findable.
 
 | | |
-|---|---|
+| --- | --- |
 | `engagement/` | Per-engagement state. `target 10.10.11.42` writes `engagement/target/config/*.sh`; `aliases` sources them at shell startup so `$IP`, `$TARGET_BASE`, `$TARGET_NAME`, `$TARGET_LAB`, `$TARGET_VPN` are live in every shell. `attack` is the other half — your own address per interface. `setup_workspace` builds the tmux/i3 layout, with full pane logging. |
 | `recon/` | Enumeration and scanning: `port_scan.sh`, `pingsweep.sh`, `enumcert`, `portlist`, plus the `autorecon/` and `web_scan/` wrappers. |
 | `access/` | Getting a shell: `payloads/`, `footholder/`, `msf_scripts/`, `xfer_cmd/`, macro tooling. |

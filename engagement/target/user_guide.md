@@ -265,7 +265,7 @@ Nothing in the script enforces this. It is a written artifact, and the enforceme
 ### The sections
 
 | Section | Holds | Discipline |
-|---|---|---|
+| --- | --- | --- |
 | **0. Rules** | Tick-box enumeration rules | Tick these before writing anything in section 3 |
 | **1. Facts** | Ports, versions, hostnames, usernames, emails, paths, tech stack, odd HTTP headers | Verbatim only. What the box literally told you. No interpretation |
 | **2. Anomalies** | Deviations from a default install | A stock nginx page is not an anomaly. A stock nginx page serving `/backup/` is |

@@ -44,7 +44,7 @@ The sourcing is guarded, so missing or unreadable config files can never abort s
 Configuration lives in `engagement/target/config/`, next to the script itself. Two kinds of file:
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `targ.sh`, `base.sh`, `name.sh`, `lab.sh`, `vpn.sh` | Engagement **state**. Plain `export X="..."` so a shell can source them. |
 | `config.toml` | Project **structure** — which directories, files, symlinks and checklists a project gets. |
 | `config.legacy.sh` | Backup of a pre-port `config.sh`, written once during migration. |
@@ -106,9 +106,18 @@ To customize the notes themselves, edit `engagement/target/templates/host-notes.
 
 Nothing to do by hand: the first run of `target.py` migrates automatically and prints what it did.
 
-**Config adoption.** The old bash implementation resolved its own directory with `cd "$(dirname "${BASH_SOURCE[0]}")" && pwd`, which does not follow symlinks. Invoked through `~/.local/bin/target`, it therefore stored everything in `~/.local/bin/config/` rather than `engagement/target/config/`. On first run, `target.py` finds that directory and **copies** (never moves) the files to the canonical location, then tells you the `rm -rf` command to clean up. Copying means a rollback still finds its config where it expects.
+**Config adoption.** The old bash implementation resolved its own directory with `cd "$(dirname
+"${BASH_SOURCE[0]}")" && pwd`, which does not follow symlinks. Invoked through
+`~/.local/bin/target`, it therefore stored everything in `~/.local/bin/config/` rather than
+`engagement/target/config/`. On first run, `target.py` finds that directory and **copies**
+(never moves) the files to the canonical location, then tells you the `rm -rf` command to clean
+up. Copying means a rollback still finds its config where it expects.
 
-**Structure migration.** A legacy `config.sh` is evaluated with bash (`declare -p`) so that documented customization idioms like `PROJECT_DIRS+=( ... )` and `PROJECT_SYMLINKS["/path"]="dest"` survive. The result is written to `config.toml` and the original is renamed to `config.legacy.sh`. If the file cannot be evaluated, `target` writes defaults, leaves `config.sh` untouched, and warns loudly rather than guessing.
+**Structure migration.** A legacy `config.sh` is evaluated with bash (`declare -p`) so that
+documented customization idioms like `PROJECT_DIRS+=( ... )` and
+`PROJECT_SYMLINKS["/path"]="dest"` survive. The result is written to `config.toml` and the
+original is renamed to `config.legacy.sh`. If the file cannot be evaluated, `target` writes
+defaults, leaves `config.sh` untouched, and warns loudly rather than guessing.
 
 **Rollback** is documented in `engagement/target/legacy/README.md`. The state files keep their shell format specifically so the frozen bash remains a drop-in.
 

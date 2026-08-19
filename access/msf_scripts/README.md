@@ -8,7 +8,7 @@ combination.
 ## Handlers
 
 | File | Payload |
-|---|---|
+| --- | --- |
 | `meterpreter_nix_x64_tcp.rc` | `linux/x64/meterpreter/reverse_tcp` |
 | `meterpreter_nix_x86_tcp.rc` | `linux/meterpreter/reverse_tcp` |
 | `meterpreter_win_x64_tcp.rc` | `windows/x64/meterpreter/reverse_tcp` |
