@@ -1,14 +1,12 @@
 #!/usr/bin/env python3 
 
-from flask import Flask, request, send_file, g, redirect, send_from_directory
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
-import sqlite3
-import json
 import urllib.parse
 import base64
 import argparse
 import os
-from colorama import Fore, Back, Style
+from colorama import Fore
 
 
 def urlencode(str):
@@ -22,7 +20,7 @@ parser.add_argument('port', help='The port you want to bind the web server too',
 parser.add_argument('-s','--ssl', help='Serve ssl, requires ssl_key and ssl_cert', action='store_true', default=False)
 parser.add_argument('-sk','--ssl_key', help='SSL key to use for the HTTPS server', default='key.pem')
 parser.add_argument('-sc','--ssl_cert', help='SSL certificate to use for the HTTPS server', default='cert.pem')
-parser.add_argument('-b','--bind', help='IP Adderess to bind too', default='0.0.0.0')
+parser.add_argument('-b','--bind', help='IP Address to bind too', default='0.0.0.0')
 parser.add_argument('-d', '--directory', help='Directory to serve files from default is current working directory')
 
 
@@ -64,12 +62,12 @@ def creds():
 
         if data.get('data'):
             try:
-                print (Fore.GREEN+str(unencode(data.get('data'))))
-            except:
+                print (Fore.GREEN+str(urldecode(data.get('data'))))
+            except (ValueError, TypeError):
                 pass
             try:
                 print (Fore.GREEN+str(base64.b64decode(data.get('data'))))
-            except:
+            except (ValueError, TypeError):
                 pass
 
         print (Fore.RESET+'- data ' + ('-' *93))
@@ -85,12 +83,12 @@ def creds():
         if data.get('data'):
             print (Fore.RESET+'- query decoded' + ('-' *84))
             try:
-                print (Fore.GREEN+str(unencode(data.get('data'))))
-            except:
+                print (Fore.GREEN+str(urldecode(data.get('data'))))
+            except (ValueError, TypeError):
                 pass
             try:
                 print (Fore.GREEN+str(base64.b64decode(data.get('data'))))
-            except:
+            except (ValueError, TypeError):
                 pass
         if data.get('update'):
             print (Fore.RESET+'- update ' + ('-' *91))

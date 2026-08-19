@@ -124,7 +124,7 @@ search_keytab_files() {
     find / -name "*.keytab" -type f 2>/dev/null
 }
 
-# Function to search for krb5cc files for users, domain users get seperate /tmp dirs
+# Function to search for krb5cc files for users, domain users get separate /tmp dirs
 search_krb5cc_files() {
     echo "===== [Searching for krb5cc files] ==================================================================="
     find / -name "krb5cc_*" -type f 2>/dev/null

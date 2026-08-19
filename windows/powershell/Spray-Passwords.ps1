@@ -64,7 +64,7 @@
     Change Requests for vNext (not prioritized):
      CR-0001: Support for Fine-Grained Password Policies (FGPP).
      CR-0002: Find better way of getting Default Domain Password Policy than "NET ACCOUNTS". Get-ADDefaultDomainPasswordPolicy is not en option as it relies on RSAT.
-     CR-0003: Threated approach to test more user/password combinations simultaneously.
+     CR-0003: Threaded approach to test more user/password combinations simultaneously.
      CR-0004: Exception or include list based on username, group membership, SID's or the like.
      CR-0005: Exclude user account that executes the script (password probably already known).
     Verbose output:
@@ -100,7 +100,7 @@ Function isNumeric ($x) {
     Return $isNum
 }
 
-# Method to get the lockout threshold - does not take FGPP into acocunt
+# Method to get the lockout threshold - does not take FGPP into account
 Function Get-threshold
 {
     $data = net accounts
@@ -120,7 +120,7 @@ Function Get-threshold
     Return $threshold
 }
 
-# Method to get the lockout observation window - does not tage FGPP into account
+# Method to get the lockout observation window - does not take FGPP into account
 Function Get-Duration
 {
     $data = net accounts
