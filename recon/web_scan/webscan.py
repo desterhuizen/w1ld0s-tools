@@ -20,7 +20,7 @@ def scan_sites(site_list):
             path = os.getcwd() + '/screenshots/' + site.replace('/', '').replace(':', '_').replace('.', '_') + ".png"
             print('Writing:' + path)
             driver.save_screenshot(path)
-        except:
+        except Exception:
             print('Ignoring: ' + site)
 
     # 4. close the web driver

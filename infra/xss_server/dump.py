@@ -16,13 +16,13 @@ def write_to_file(url, content):
             os.makedirs(path)
         with open(fullname, 'w') as f:
             f.write(content)
-    except:
+    except OSError:
         print('error writing: '+url)
 
 if __name__ == '__main__':
     conn = create_connection(database)
     locations = get_locations(conn)
-    for l in locations:
-        content = get_content_by_id(conn, (l[0],))
+    for row in locations:
+        content = get_content_by_id(conn, (row[0],))
         if content is not None:
-            write_to_file(l[1], content[0][2])
+            write_to_file(row[1], content[0][2])
