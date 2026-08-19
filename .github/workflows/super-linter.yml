@@ -10,8 +10,11 @@ name: Lint Code Base
 on:  # yamllint disable-line rule:truthy
   push:
     branches: ["main"]
+  # No branch filter here on purpose. `branches:` under pull_request matches the
+  # *base*, so pinning it to main meant a PR stacked on another PR ran no
+  # linters at all -- exactly the PRs that most need checking before the branch
+  # underneath them merges.
   pull_request:
-    branches: ["main"]
 
 permissions:
   contents: read
