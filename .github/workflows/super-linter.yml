@@ -91,10 +91,11 @@ jobs:
           # meant to be compiled on a target, not a C project.
           VALIDATE_CPP: false
           VALIDATE_CLANG_FORMAT: false
-          # PSScriptAnalyzer cannot parse access/payloads/powershell_pure_memory.ps1
-          # at all: line 40 is [[[SHELL_CODE]]], the placeholder the shellcode is
-          # substituted into. The rest of its output is style over vendored
-          # scripts such as powershell/Spray-Passwords.ps1.
+          # PSScriptAnalyzer cannot parse
+          # access/payloads/powershell_pure_memory.ps1 at all: line 40 is
+          # [[[SHELL_CODE]]], the placeholder the shellcode is substituted
+          # into. The rest of its output is style over vendored scripts such
+          # as powershell/Spray-Passwords.ps1.
           VALIDATE_POWERSHELL: false
           # A terminology checker that wants "repository" for "repo" and "cheat
           # sheets" for "cheatsheets" throughout prose written deliberately the
