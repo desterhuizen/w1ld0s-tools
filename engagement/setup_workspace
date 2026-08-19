@@ -78,7 +78,12 @@ tmux set-hook -g after-new-window "run-shell -b '\"$SELF\" --log-pane #{pane_id}
 echo "[+] Session logs: $LOG_DIR"
 
 # Keep i3-msg commands for Linux compatibility
-i3-msg 'workspace "1 Term "; append_layout $HOME/.config/i3/i3-workspace-1.json'
+#
+# $HOME has to be broken out of the single quotes the same way $WS_ROOT is
+# below. i3 has no shell and does not expand environment variables, so with
+# $HOME quoted literally it was handed the string "$HOME/.config/..." and
+# the layout never loaded.
+i3-msg 'workspace "1 Term "; append_layout '"$HOME"'/.config/i3/i3-workspace-1.json'
 
 i3-msg 'workspace "1 Term "; exec terminator -T T1 -e "tmux new -A -s T1 -c '"$WS_ROOT"' && zsh"'
 i3-msg 'workspace "1 Term "; exec terminator -T T2 -e "tmux new -A -s T2 -c '"$WS_ROOT"/www' && zsh"'

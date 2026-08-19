@@ -3,7 +3,7 @@
 if [[ $# -eq 0 ]]; then 
 	echo "certenum <domain> [-l]";
 elif [[ $2 == "-l" ]]; then
-	echo | openssl s_client -showcerts -servername $1 -connect $1:443 2>/dev/null | openssl x509 -inform pem -noout -text | grep 'DNS:' | sed 's/DNS:/\n/g' | tr -d ','
+	echo | openssl s_client -showcerts -servername "$1" -connect "$1:443" 2>/dev/null | openssl x509 -inform pem -noout -text | grep 'DNS:' | sed 's/DNS:/\n/g' | tr -d ','
 else
-	echo | openssl s_client -showcerts -servername $1 -connect $1:443 2>/dev/null | openssl x509 -inform pem -noout -text
+	echo | openssl s_client -showcerts -servername "$1" -connect "$1:443" 2>/dev/null | openssl x509 -inform pem -noout -text
 fi
