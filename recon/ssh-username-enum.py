@@ -113,6 +113,9 @@ def create_socket(hostname: str, port: int) -> Union[socket.socket, None]:
         return socket.create_connection((hostname, port))
     except socket.error as e:
         print(f'socket error: {e}', file=sys.stdout)
+        # Explicit, not an implicit fall-off-the-end: the signature says the
+        # caller may get None back, and mypy requires it to be spelled out.
+        return None
 
 
 def connect(username: str, hostname: str, port: int, verbose: bool = False, **kwargs) -> None:
