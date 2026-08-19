@@ -93,6 +93,13 @@ Bash 4+ (for `mapfile`), `glow` for `common`, and `i3`/`terminator`/`tmux` for
 `setup_workspace`. `w1ld0s` installs all of them. Individual scripts pull in their own
 tools — `scriptlist -d <name>` shows what each one needs.
 
+## Contributing
+
+Changes reach `main` through `staging` — `feature/xyz` → PR → `staging` → PR →
+`main` — because `main` is what the installs above clone. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the branch rules, the merge policy, and how
+to run the CI linters locally.
+
 ## License
 
 AGPLv3 — see [LICENSE](LICENSE). Read [NOTICE](NOTICE) before use: this is an
