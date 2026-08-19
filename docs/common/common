@@ -3,7 +3,12 @@
 # Script configuration
 COMMON_PATH="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/docs/common"
 CONTENT=$COMMON_PATH/content
-EXEC="glow"
+# -w 0 disables glow's word wrapping. At the default width it breaks long
+# commands mid-token -- "(Read-Host -" on one line, "AsSecureString -Prompt" on
+# the next -- so copying one out of a cheatsheet gives you a broken command.
+# Unwrapped, the terminal soft-wraps instead and the line survives a copy.
+# An array, not a string: a bare $EXEC would word-split unquoted.
+EXEC=(glow -w 0)
 
 # Get list of available documents (excluding check_lists directory)
 # Sort on the full filename before the extension is stripped, so the order
@@ -80,7 +85,7 @@ search_content() {
 display_document() {
     local doc="$1"
     if [[ -f "$CONTENT/$doc.md" ]]; then
-        $EXEC "$CONTENT/$doc.md"
+        "${EXEC[@]}" "$CONTENT/$doc.md"
     else
         echo "Error: '$doc' is not a valid option."
         exit 1
