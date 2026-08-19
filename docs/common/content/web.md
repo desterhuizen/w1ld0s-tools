@@ -41,7 +41,7 @@ feroxbuster --url $URL -w /usr/share/seclists/Discovery/Web-Content/directory-li
 ### Alternative Wordlists
 
 | Count  | Path                                                                     |
-| -------- | -------------------------------------------------------------------------- |
+| ------ | ------------------------------------------------------------------------ |
 | 137771 | `/usr/share/seclists/Discovery/Web-Content/combined_directories.txt`     |
 | 127383 | `/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-big.txt`   |
 | 22056  | `/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt`           |
@@ -55,14 +55,14 @@ feroxbuster --url $URL -w /usr/share/seclists/Discovery/Web-Content/directory-li
 
 ### Extensions
 
-| no | File Type    | Uses                                        |
-| ---- | -------------- | --------------------------------------------- |
-| 1  | `.yaml,.yml` | Config files especially on flat cms systems |
+| no  | File Type    | Uses                                        |
+| --- | ------------ | ------------------------------------------- |
+| 1   | `.yaml,.yml` | Config files especially on flat cms systems |
 
 ### API Enumeration
 
 | Count | Path                                                                  |
-| ------- | ----------------------------------------------------------------------- |
+| ----- | --------------------------------------------------------------------- |
 | 268   | `/usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt`     |
 | 3132  | `/usr/share/seclists/Discovery/Web-Content/api/objects.txt`           |
 | 12334 | `/usr/share/seclists/Discovery/Web-Content/api/api-endpoints-res.txt` |

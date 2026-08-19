@@ -55,7 +55,7 @@ hashcat <hash> -a 3 partial_password_?d?d?d?d
 ### Hashcat Hash Types Reference
 
 | Command  | Hash Type  |
-| ---------- | ------------ |
+| -------- | ---------- |
 | -m 0     | MD5        |
 | -m 100   | SHA1       |
 | -m 1000  | NTLM       |

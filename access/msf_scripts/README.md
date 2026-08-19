@@ -7,16 +7,16 @@ combination.
 
 ## Handlers
 
-| File | Payload |
-| --- | --- |
-| `meterpreter_nix_x64_tcp.rc` | `linux/x64/meterpreter/reverse_tcp` |
-| `meterpreter_nix_x86_tcp.rc` | `linux/meterpreter/reverse_tcp` |
-| `meterpreter_win_x64_tcp.rc` | `windows/x64/meterpreter/reverse_tcp` |
+| File                          | Payload                                 |
+| ----------------------------- | --------------------------------------- |
+| `meterpreter_nix_x64_tcp.rc`  | `linux/x64/meterpreter/reverse_tcp`     |
+| `meterpreter_nix_x86_tcp.rc`  | `linux/meterpreter/reverse_tcp`         |
+| `meterpreter_win_x64_tcp.rc`  | `windows/x64/meterpreter/reverse_tcp`   |
 | `meterpreter_win_x64_http.rc` | `windows/x64/meterpreter/reverse_https` |
-| `meterpreter_win_x86_tcp.rc` | `windows/meterpreter/reverse_tcp` |
-| `meterpreter_win_x86_http.rc` | `windows/meterpreter/reverse_https` |
-| `shell_win_x64_tcp.rc` | `windows/x64/shell/reverse_tcp` |
-| `shell_win_x86_tcp.rc` | `windows/shell/reverse_tcp` |
+| `meterpreter_win_x86_tcp.rc`  | `windows/meterpreter/reverse_tcp`       |
+| `meterpreter_win_x86_http.rc` | `windows/meterpreter/reverse_https`     |
+| `shell_win_x64_tcp.rc`        | `windows/x64/shell/reverse_tcp`         |
+| `shell_win_x86_tcp.rc`        | `windows/shell/reverse_tcp`             |
 
 All bind `LHOST tun0` / `LPORT 443`. There used to be a parallel `_tun0` set of these,
 byte-identical to the files above because the "non-tun0" ones already set `LHOST tun0`;

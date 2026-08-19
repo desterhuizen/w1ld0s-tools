@@ -264,13 +264,13 @@ Nothing in the script enforces this. It is a written artifact, and the enforceme
 
 ### The sections
 
-| Section | Holds | Discipline |
-| --- | --- | --- |
-| **0. Rules** | Tick-box enumeration rules | Tick these before writing anything in section 3 |
-| **1. Facts** | Ports, versions, hostnames, usernames, emails, paths, tech stack, odd HTTP headers | Verbatim only. What the box literally told you. No interpretation |
-| **2. Anomalies** | Deviations from a default install | A stock nginx page is not an anomaly. A stock nginx page serving `/backup/` is |
-| **3. Hypotheses** | anomaly → candidate attack path → what would prove or kill it | Nothing here that is not traceable to a line in section 2 |
-| **4. Tried / failed** | What you tried and **why** it failed | "Didn't work" is not a reason. The reason is what stops you repeating it at hour six |
+| Section               | Holds                                                                              | Discipline                                                                           |
+| --------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **0. Rules**          | Tick-box enumeration rules                                                         | Tick these before writing anything in section 3                                      |
+| **1. Facts**          | Ports, versions, hostnames, usernames, emails, paths, tech stack, odd HTTP headers | Verbatim only. What the box literally told you. No interpretation                    |
+| **2. Anomalies**      | Deviations from a default install                                                  | A stock nginx page is not an anomaly. A stock nginx page serving `/backup/` is       |
+| **3. Hypotheses**     | anomaly → candidate attack path → what would prove or kill it                      | Nothing here that is not traceable to a line in section 2                            |
+| **4. Tried / failed** | What you tried and **why** it failed                                               | "Didn't work" is not a reason. The reason is what stops you repeating it at hour six |
 
 Section 0 carries the rules that catch the usual misses — full `-p-` before any `-sCV`, every hostname into `/etc/hosts` and then vhost-fuzzed, page source and every JS file read by hand before any directory brute force, and a fresh enumeration pass after **every** credential found.
 

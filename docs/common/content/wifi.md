@@ -140,7 +140,7 @@ sudo airmon-ng stop wlan0
 ### Important Options
 
 | flag    | action              |
-| --------- | --------------------- |
+| ------- | ------------------- |
 | -w      | Write file location |
 | --bssid | Filter a BSSID      |
 | -c      | Filter a channel    |

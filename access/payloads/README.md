@@ -4,13 +4,13 @@ Payload templates and the helpers that build them. Nothing here is published as 
 command except `create_proxy.sh` and `generate_phase0.sh`; the rest are sources you
 edit and stage.
 
-| File | What it is |
-| --- | --- |
-| `shell_code_runner.ps1` | PowerShell shellcode runner, a direct port of the VBA version. See `shell_code_runner_readme.md` for the msfvenom line that feeds it. |
-| `powershell_pure_memory.ps1` | Download-and-execute with nothing touching disk. |
-| `proxy.ps1`, `create_proxy.sh` | Proxy-aware download stub and its generator. |
-| `generate_phase0.sh` | Builds the first-stage dropper. |
-| `office_payload_complete.doc` | See below. |
+| File                           | What it is                                                                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `shell_code_runner.ps1`        | PowerShell shellcode runner, a direct port of the VBA version. See `shell_code_runner_readme.md` for the msfvenom line that feeds it. |
+| `powershell_pure_memory.ps1`   | Download-and-execute with nothing touching disk.                                                                                      |
+| `proxy.ps1`, `create_proxy.sh` | Proxy-aware download stub and its generator.                                                                                          |
+| `generate_phase0.sh`           | Builds the first-stage dropper.                                                                                                       |
+| `office_payload_complete.doc`  | See below.                                                                                                                            |
 
 ## office_payload_complete.doc
 

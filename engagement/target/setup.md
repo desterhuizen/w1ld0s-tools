@@ -43,11 +43,11 @@ The sourcing is guarded, so missing or unreadable config files can never abort s
 
 Configuration lives in `engagement/target/config/`, next to the script itself. Two kinds of file:
 
-| File | Purpose |
-| --- | --- |
-| `targ.sh`, `base.sh`, `name.sh`, `lab.sh`, `vpn.sh` | Engagement **state**. Plain `export X="..."` so a shell can source them. |
-| `config.toml` | Project **structure** — which directories, files, symlinks and checklists a project gets. |
-| `config.legacy.sh` | Backup of a pre-port `config.sh`, written once during migration. |
+| File                                                | Purpose                                                                                   |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `targ.sh`, `base.sh`, `name.sh`, `lab.sh`, `vpn.sh` | Engagement **state**. Plain `export X="..."` so a shell can source them.                  |
+| `config.toml`                                       | Project **structure** — which directories, files, symlinks and checklists a project gets. |
+| `config.legacy.sh`                                  | Backup of a pre-port `config.sh`, written once during migration.                          |
 
 ### Where the config directory is resolved from
 
