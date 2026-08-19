@@ -9,7 +9,10 @@ name: Lint Code Base
 
 on:  # yamllint disable-line rule:truthy
   push:
-    branches: ["main"]
+    # Both long-lived branches. A push to staging is linted against
+    # DEFAULT_BRANCH below, so it reports on everything staging has
+    # accumulated that main does not yet have.
+    branches: ["main", "staging"]
   # No branch filter here on purpose. `branches:` under pull_request matches the
   # *base*, so pinning it to main meant a PR stacked on another PR ran no
   # linters at all -- exactly the PRs that most need checking before the branch
