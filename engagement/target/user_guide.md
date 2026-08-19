@@ -13,7 +13,7 @@ target
 ```
 
 Output example:
-```
+```text
 Target Base    : /home/user/pentest-projects
 Target Name    : client-x
 Target IP      : 192.168.1.1
@@ -149,7 +149,7 @@ target -L dante
 
 With a lab set, project paths become nested:
 
-```
+```text
 ${TARGET_BASE}/${LAB}/${HOST}      e.g. ~/pentest-projects/dante/host-01
 ```
 
@@ -159,7 +159,7 @@ With no lab set, paths stay flat (`${TARGET_BASE}/${HOST}`) exactly as before �
 
 Scaffolding a lab creates shared, cross-host resources at the lab root:
 
-```
+```text
 dante/
 ├── README.md           # Lab overview
 ├── network.md          # Host inventory / network map (fill in as you enumerate)
@@ -230,7 +230,7 @@ target --help
 
 When you create a new project with `target -m`, the following structure is created:
 
-```
+```text
 project_name/
 ├── README.md           # Project documentation (write-if-absent)
 ├── notes.md            # Structured enumeration notes (see below)
@@ -308,7 +308,7 @@ Keep the `## N.` headings intact, or the append commands cannot find their secti
 
 `aliases` sources the state files at shell startup, which exports:
 
-```
+```text
 $IP  $URL  $TARGET_BASE  $TARGET_NAME  $TARGET_LAB  $TARGET_VPN
 ```
 

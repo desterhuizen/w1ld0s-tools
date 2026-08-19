@@ -67,7 +67,7 @@ them (`my_scan`, `htricks`, `gtfo`, `serve`, …); source it, don't execute it. 
 loader; the aliases themselves live in `aliases.d/`, one file per area, loaded in
 numeric order because `00-state.sh` exports what the rest read:
 
-```
+```text
 00-state    target/attack config, $IP, $A_IP, _my_ip
 10-recon    my_scan, /etc/hosts helpers, monitor_host
 20-access   listeners, PowerShell encoding, ysoserial
