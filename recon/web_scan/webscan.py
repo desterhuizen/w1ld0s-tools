@@ -34,9 +34,9 @@ def load_site_list(path):
     for site in sites:
         # We remove any invalid URIs
         if re.search(
-                '^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$',
+                r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$',
                 site):
-            if not re.search('^(http:\/\/|https:\/\/)',site):
+            if not re.search(r'^(http:\/\/|https:\/\/)',site):
                 site = 'https://'+site
             clean_list.append(site.rstrip('\n'))
     return clean_list

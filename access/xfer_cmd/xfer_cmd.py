@@ -208,7 +208,7 @@ parser.add_argument('Filename', help='''The file you would like to transfer, rel
                     Eg. '../../../etc/passwd', '/etc/passwd',  'http://<IP>/file' ''')
 
 parser.add_argument('-d','--destination',dest='dest',  help='''The destination location relative to where the commands will be run.
-                    Eg. '/tmp/shell', 'c:\\Windows\System32\Temp\shell.exe' ''')
+                    Eg. '/tmp/shell', 'c:\\Windows\\System32\\Temp\\shell.exe' ''')
 
 parser.add_argument('-t', '--target', dest='target', choices=['linux','windows'],
                     help='The target platform where the command will be run to transfer a file.',
