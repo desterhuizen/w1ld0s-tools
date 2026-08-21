@@ -1,7 +1,12 @@
 #!/bin/bash
 
 # Script configuration
-COMMON_PATH="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/docs/common"
+# Self-locating: $W1LD0S_TOOLS_DIR names the checkout root, so the
+# subdirectory has to be appended to it; with it unset or empty, follow the
+# ~/.local/bin symlink setup_links makes back to this file, which already
+# lives in docs/common.
+COMMON_PATH="${W1LD0S_TOOLS_DIR:+${W1LD0S_TOOLS_DIR}/docs/common}"
+COMMON_PATH="${COMMON_PATH:-$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd -P)}"
 CONTENT=$COMMON_PATH/content
 # -w 0 disables glow's word wrapping. At the default width it breaks long
 # commands mid-token -- "(Read-Host -" on one line, "AsSecureString -Prompt" on
