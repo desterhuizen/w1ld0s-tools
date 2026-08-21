@@ -1,4 +1,9 @@
 #!/bin/bash
+# The shebang is load-bearing even though this file is sourced and never
+# executed. With no file extension it is the only thing that makes `file`, and
+# so super-linter, see this as bash and run shellcheck over it. The aliases.d/
+# fragments carry a `# shellcheck shell=bash` directive and no shebang instead,
+# because their .sh extension does that job for them.
 #
 # Penetration Testing Aliases and Functions
 #
