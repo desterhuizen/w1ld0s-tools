@@ -28,8 +28,10 @@ echo 'source ~/tools/repos/w1ld0s-tools/aliases' >> ~/.zshrc
 bit is load-bearing: a file is exported as a command **iff** it is executable, which is
 why `aliases` is mode `0644`.
 
-Cloning elsewhere is fine — export `W1LD0S_TOOLS_DIR` to point at the checkout and
-`aliases`, `attack`, `common` and `scriptlist` all follow it.
+Cloning elsewhere is fine — `attack`, `common` and `scriptlist` resolve their own
+location through the `~/.local/bin` symlink, so they need no configuration. Exporting
+`W1LD0S_TOOLS_DIR` to point at the checkout is an optional override, which those three
+and `aliases` all follow.
 
 Upgrading from the flat layout: the per-engagement state is gitignored, so it stays
 behind at the old paths. Move it once, then re-link:
