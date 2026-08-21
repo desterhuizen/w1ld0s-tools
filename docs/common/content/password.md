@@ -96,7 +96,7 @@ hydra -v -V -L "users.txt" -P "passwords.txt" -s 80 \
 
 ```bash
 # FTP attack with null/same/reverse options enabled
-hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt -P /usr/share/seclists/Passwords/500-worst-passwords.txt ftp://$IP -e nsr
+hydra -L $WORDLISTS/SecLists/Usernames/top-usernames-shortlist.txt -P $WORDLISTS/SecLists/Passwords/500-worst-passwords.txt ftp://$IP -e nsr
 ```
 
 ### Medusa
@@ -161,18 +161,18 @@ impacket-secretsdump <domain>/<username>:<password>@<IP>
 
 ### Specialized Lists
 
-- `/usr/share/seclists/Passwords/Keyboard-Combinations.txt` (Keyboard patterns)
+- `/opt/w1ld0s/wordlists/SecLists/Passwords/Keyboard-Combinations.txt` (Keyboard patterns)
 - `/opt/w1ld0s/wordlists/wfuzz/others/common_pass.txt` (Common passwords)
-- `/usr/share/seclists/Passwords/Default-Credentials/` (Default creds by
+- `/opt/w1ld0s/wordlists/SecLists/Passwords/Default-Credentials/` (Default creds by
   product)
 -
-`/usr/share/seclists/Passwords/Common-Credentials/top-passwords-shortlist.txt` (
+`/opt/w1ld0s/wordlists/SecLists/Passwords/Common-Credentials/top-passwords-shortlist.txt` (
 Most common)
 
 ### Username Lists
 
-- `/usr/share/seclists/Usernames/top-usernames-shortlist.txt` (Common usernames)
-- `/usr/share/seclists/Usernames/Names/names.txt` (Common names)
+- `/opt/w1ld0s/wordlists/SecLists/Usernames/top-usernames-shortlist.txt` (Common usernames)
+- `/opt/w1ld0s/wordlists/SecLists/Usernames/Names/names.txt` (Common names)
 
 ---
 

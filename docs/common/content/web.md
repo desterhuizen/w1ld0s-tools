@@ -8,21 +8,21 @@
 
 - Directories:
   ```bash
-  gobuster dir -u $URL -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -o gb_directories
+  gobuster dir -u $URL -w $WORDLISTS/SecLists/Discovery/Web-Content/raft-large-directories.txt -o gb_directories
   ```
 - Files:
   ```bash
-  gobuster dir -u $URL -w /usr/share/seclists/Discovery/Web-Content/raft-large-files.txt -o gb_files
+  gobuster dir -u $URL -w $WORDLISTS/SecLists/Discovery/Web-Content/raft-large-files.txt -o gb_files
   ```
 - All (multiple useful wordlists/extensions):
   ```bash
-  gobuster dir -u $URL -w /usr/share/seclists/Discovery/Web-Content/big.txt -o gb_all
-  gobuster dir -u $URL -w /usr/share/seclists/Discovery/Web-Content/big.txt -o gb_all -x php,asp,txt,md,html
-  gobuster dir -u $URL -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt -o gb_all
+  gobuster dir -u $URL -w $WORDLISTS/SecLists/Discovery/Web-Content/big.txt -o gb_all
+  gobuster dir -u $URL -w $WORDLISTS/SecLists/Discovery/Web-Content/big.txt -o gb_all -x php,asp,txt,md,html
+  gobuster dir -u $URL -w $WORDLISTS/SecLists/Discovery/Web-Content/raft-large-words.txt -o gb_all
   ```
 - Vhosts:
   ```bash
-  gobuster vhost -u $URL -w $WORDLISTS/seclists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
+  gobuster vhost -u $URL -w $WORDLISTS/SecLists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
   ```
 
 ### FFuF
@@ -35,23 +35,23 @@ ffuf -w $WORDLISTS/dirb/big.txt -u $URL/FUZZ
 
 ```bash
 feroxbuster --url $URL
-feroxbuster --url $URL -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-big.txt
+feroxbuster --url $URL -w $WORDLISTS/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt
 ```
 
 ### Alternative Wordlists
 
-| Count  | Path                                                                     |
-| ------ | ------------------------------------------------------------------------ |
-| 137771 | `/usr/share/seclists/Discovery/Web-Content/combined_directories.txt`     |
-| 127383 | `/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-big.txt`   |
-| 22056  | `/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt`           |
-| 20469  | `/usr/share/dirb/wordlists/big.txt`                                      |
-| 14170  | `/usr/share/dirbuster/wordlists/directory-list-1.0.txt`                  |
-| 12833  | `/usr/share/seclists/Discovery/Web-Content/combined_words.txt`           |
-| 11960  | `/usr/share/seclists/Discovery/Web-Content/raft-large-words.txt`         |
-| 8766   | `/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-small.txt` |
-| 8701   | `/usr/share/seclists/Discovery/Web-Content/LinuxFileList.txt`            |
-| 2565   | `/usr/share/seclists/Discovery/Web-Content/quickhits.txt`                |
+| Count  | Path                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
+| 137771 | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/combined_directories.txt`     |
+| 127383 | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt`   |
+| 22056  | `/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt`                      |
+| 20469  | `/usr/share/dirb/wordlists/big.txt`                                                 |
+| 14170  | `/usr/share/dirbuster/wordlists/directory-list-1.0.txt`                             |
+| 12833  | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/combined_words.txt`           |
+| 11960  | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/raft-large-words.txt`         |
+| 8766   | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt` |
+| 8701   | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/LinuxFileList.txt`            |
+| 2565   | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/quickhits.txt`                |
 
 ### Extensions
 
@@ -61,11 +61,11 @@ feroxbuster --url $URL -w /usr/share/seclists/Discovery/Web-Content/directory-li
 
 ### API Enumeration
 
-| Count | Path                                                                  |
-| ----- | --------------------------------------------------------------------- |
-| 268   | `/usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt`     |
-| 3132  | `/usr/share/seclists/Discovery/Web-Content/api/objects.txt`           |
-| 12334 | `/usr/share/seclists/Discovery/Web-Content/api/api-endpoints-res.txt` |
+| Count | Path                                                                             |
+| ----- | -------------------------------------------------------------------------------- |
+| 268   | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/api/api-endpoints.txt`     |
+| 3132  | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/api/objects.txt`           |
+| 12334 | `/opt/w1ld0s/wordlists/SecLists/Discovery/Web-Content/api/api-endpoints-res.txt` |
 
 ---
 
@@ -175,7 +175,7 @@ curl -v -I http://target
   ```
 - Gobuster vhost:
   ```bash
-  gobuster vhost -u $URL -w $WORDLISTS/seclists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
+  gobuster vhost -u $URL -w $WORDLISTS/SecLists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
   ```
 - FFuF vhost:
   ```bash
