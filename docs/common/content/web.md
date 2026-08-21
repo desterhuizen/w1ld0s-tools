@@ -22,13 +22,13 @@
   ```
 - Vhosts:
   ```bash
-  gobuster vhost -u $URL -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
+  gobuster vhost -u $URL -w $WORDLISTS/seclists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
   ```
 
 ### FFuF
 
 ```bash
-ffuf -w /usr/share/wordlists/dirb/big.txt -u $URL/FUZZ
+ffuf -w $WORDLISTS/dirb/big.txt -u $URL/FUZZ
 ```
 
 ### Feroxbuster
@@ -93,7 +93,7 @@ nuclei -u $URL -o nuclei-scan
   ```
 - Brute Force Users:
   ```bash
-  wpscan --url $URL -P /usr/share/wordlist/rockyou.txt
+  wpscan --url $URL -P $ROCKYOU
   ```
 
 ---
@@ -175,11 +175,11 @@ curl -v -I http://target
   ```
 - Gobuster vhost:
   ```bash
-  gobuster vhost -u $URL -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
+  gobuster vhost -u $URL -w $WORDLISTS/seclists/Discovery/DNS/subdomains-top1million-20000.txt --append-domain
   ```
 - FFuF vhost:
   ```bash
-  ffuf -w /usr/share/wordlists/SecLists/Discovery/DNS/namelist.txt -H "Host: FUZZ.acmeitsupport.thm" -u http://10.10.196.56
+  ffuf -w $WORDLISTS/SecLists/Discovery/DNS/namelist.txt -H "Host: FUZZ.acmeitsupport.thm" -u http://10.10.196.56
   ```
 
 ---
@@ -188,7 +188,7 @@ curl -v -I http://target
 
 - FFuF for username existence:
   ```bash
-  ffuf -w /usr/share/wordlists/SecLists/Usernames/Names/names.txt -X POST -d "username=FUZZ&email=x&password=x&cpassword=x" -H "Content-Type: application/x-www-form-urlencoded" -u http://10.10.245.78/customers/signup -mr "username already exists"
+  ffuf -w $WORDLISTS/SecLists/Usernames/Names/names.txt -X POST -d "username=FUZZ&email=x&password=x&cpassword=x" -H "Content-Type: application/x-www-form-urlencoded" -u http://10.10.245.78/customers/signup -mr "username already exists"
   ```
 
 ---
