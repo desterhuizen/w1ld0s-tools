@@ -7,29 +7,39 @@ if [[ ! -d $BASE_LINK_PATH ]]; then
 	mkdir -p "$BASE_LINK_PATH"
 fi
 
-PWD=$(pwd)
+# Anchor to the repo rather than to $(pwd). Nothing forces the caller into this
+# directory, and from anywhere else `find .` walks that tree instead and
+# publishes all of it into ~/.local/bin.
+REPO_ROOT=$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd -P)
 
-mapfile -t items < <(find . -type f -executable -print | grep -v -E "\.git|simple_wp_plugin|setup_links" | sed "s/^\.\///g")
+mapfile -d '' -t items < <(find "$REPO_ROOT" -type f -executable -printf '%P\0' | grep -z -v -E "^(\.git|infra/simple_wp_plugin)/|^setup_links$")
 
 if [[ $1 == "-d" ]]; then
-  read -r -p "Are you sure you want to delete all the links? (Y/N) " test
-  check=$(echo "$test" | tr '[:lower:]' '[:upper:]')
+  read -r -p "Are you sure you want to delete all the links? (Y/N) " answer
+  check=$(echo "$answer" | tr '[:lower:]' '[:upper:]')
   if [[ $check == "Y" ]]; then
     for i in "${items[@]}"; do
       LINK_PATH=$BASE_LINK_PATH$(basename "$i" | sed 's/\.[^.]*$//')
-      echo "Deleting ... $LINK_PATH"
-      rm -f "$LINK_PATH"
+      # Remove only what this repo put there. ~/.local/bin also holds shellcheck,
+      # ruff and codespell, and the names published here are generic enough
+      # (dump, attack, common, portlist) to collide with them.
+      if [[ -L $LINK_PATH && $(readlink -f "$LINK_PATH") == "$REPO_ROOT"/* ]]; then
+        echo "Deleting ... $LINK_PATH"
+        rm -f "$LINK_PATH"
+      elif [[ -e $LINK_PATH || -L $LINK_PATH ]]; then
+        echo "Skipping ... $LINK_PATH (not a link into $REPO_ROOT)"
+      fi
     done
   fi
-  exit
+  exit 0
 fi
 
 for i in "${items[@]}"; do
   LINK_PATH=$BASE_LINK_PATH$(basename "$i" | sed 's/\.[^.]*$//')
   CREATE=1
   if [ -L "$LINK_PATH" ]; then
-    read -r -p "Do you want to recreate: $LINK_PATH? (Y/N) " test
-    check=$(echo "$test" | tr '[:lower:]' '[:upper:]')
+    read -r -p "Do you want to recreate: $LINK_PATH? (Y/N) " answer
+    check=$(echo "$answer" | tr '[:lower:]' '[:upper:]')
     if [[ $check == "Y" ]]; then
       echo "Deleting ... $LINK_PATH"
       rm -f "$LINK_PATH"
@@ -38,7 +48,7 @@ for i in "${items[@]}"; do
     fi
   fi	  
   if [[ $CREATE -eq 1 ]]; then 
-    echo "Creating ... $PWD/$i->$LINK_PATH"
-    ln -s "$PWD/$i" "$LINK_PATH"
+    echo "Creating ... $REPO_ROOT/$i->$LINK_PATH"
+    ln -s "$REPO_ROOT/$i" "$LINK_PATH"
   fi
 done
