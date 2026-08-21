@@ -5,11 +5,37 @@
 # `attack`, and everything derived from it. Loaded first; the fragments below
 # it depend on $IP and $A_IP being set.
 
-for _tf in targ base name lab vpn; do
-    _target_source "${_W1LD0S_DIR}/engagement/target/config/${_tf}.sh"
-done
-unset _tf
-_target_source "${_W1LD0S_DIR}/engagement/attack/attacker"
+_w1ld0s_load_state() {
+    local _tf
+    for _tf in targ base name lab vpn; do
+        _target_source "${_W1LD0S_DIR}/engagement/target/config/${_tf}.sh"
+    done
+    _target_source "${_W1LD0S_DIR}/engagement/attack/attacker"
+    return 0
+}
+_w1ld0s_load_state
+
+# `target` and `attack` write these files after this shell has already started,
+# so read them again before every prompt. Loading them only at startup meant a
+# `target 10.10.11.42` in one terminal left every other shell holding the
+# previous engagement's values indefinitely -- my_scan worked around it by
+# re-sourcing targ.sh itself, which fixed $IP inside that one function and left
+# $TARGET_BASE, $TARGET_NAME, $TARGET_LAB, $TARGET_VPN and $A_IP stale
+# everywhere. Registered idempotently, because sourcing aliases twice in one
+# shell must not stack the hook twice.
+if [ -n "${ZSH_VERSION:-}" ]; then
+    typeset -ga precmd_functions
+    case " ${precmd_functions[*]} " in
+        *" _w1ld0s_load_state "*) ;;
+        *) precmd_functions+=(_w1ld0s_load_state) ;;
+    esac
+elif [ -n "${BASH_VERSION:-}" ]; then
+    case "${PROMPT_COMMAND:-}" in
+        *_w1ld0s_load_state*) ;;
+        "") PROMPT_COMMAND="_w1ld0s_load_state" ;;
+        *) PROMPT_COMMAND="${PROMPT_COMMAND%;};_w1ld0s_load_state" ;;
+    esac
+fi
 
 # Our own address on the engagement network. Four functions below used to
 # derive this by hand, each with its own ip/awk pipeline, while `attack` exists
@@ -22,7 +48,14 @@ _my_ip() {
         echo "$A_IP"
         return 0
     fi
-    ip -4 addr show dev "$dev" 2>/dev/null | awk '/inet /{print $2}' | cut -d/ -f1
+    # A pipeline's status is its last command's, and cut succeeds on empty
+    # input, so without this the interface-read path returned an empty string
+    # and status 0. Callers writing LHOST=$(_my_ip) got an empty LHOST and no
+    # reason to stop, then built a listener or payload pointing nowhere.
+    local addr
+    addr=$(ip -4 addr show dev "$dev" 2>/dev/null | awk '/inet /{print $2}' | cut -d/ -f1)
+    [ -n "$addr" ] || return 1
+    echo "$addr"
 }
 
 # Common paths (accessible as variables)
