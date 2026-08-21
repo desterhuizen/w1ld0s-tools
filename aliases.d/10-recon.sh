@@ -34,10 +34,10 @@ function monitor_host() {
 
 function my_scan() {
     # Re-read the target state so a `target <ip>` run in this shell is picked
-    # up here. (This used to source "${SOURCE_DIR}/target", which is a
+    # up here. (This used to source "${_W1LD0S_DIR}/target", which is a
     # directory -- it always failed, and $IP was whatever the shell started
     # with.)
-    _target_source "${SOURCE_DIR}/engagement/target/config/targ.sh"
+    _target_source "${_W1LD0S_DIR}/engagement/target/config/targ.sh"
     if [ $# -ne 0 ] && [ -z "$IP" ]; then
         # Without this, every scan below ran nmap with an empty target
         # argument, which it reads as a host it cannot resolve.

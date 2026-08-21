@@ -1,4 +1,9 @@
 #!/bin/bash
+# The shebang is load-bearing even though this file is sourced and never
+# executed. With no file extension it is the only thing that makes `file`, and
+# so super-linter, see this as bash and run shellcheck over it. The aliases.d/
+# fragments carry a `# shellcheck shell=bash` directive and no shebang instead,
+# because their .sh extension does that job for them.
 #
 # Penetration Testing Aliases and Functions
 #
@@ -14,8 +19,32 @@
 # non-zero status out of the function and can kill the rc file.
 #
 # Self-locating: $W1LD0S_TOOLS_DIR wins so a checkout anywhere still works,
-# otherwise fall back to where w1ld0s module 90 clones this repo.
-SOURCE_DIR="${W1LD0S_TOOLS_DIR:-${HOME}/tools/repos/w1ld0s-tools}"
+# otherwise take the root from the path this file was sourced by. The two
+# shells record that path differently: zsh puts it in $0, but bash sets $0 to
+# the name of the shell running the rc file and keeps the sourced path in
+# $BASH_SOURCE instead, so reading $0 under bash would find no repo at all.
+if [ -n "${BASH_SOURCE+x}" ]; then
+    _w1ld0s_self="${BASH_SOURCE[0]}"
+else
+    _w1ld0s_self="$0"
+fi
+# Resolve a symlinked aliases file to the real one before taking its directory,
+# so a checkout reached through a link still finds its own aliases.d. readlink
+# -f is GNU and is what the workstation has; where it is missing the || leaves
+# the path alone, and the cd/pwd -P below still resolves a symlinked parent.
+_w1ld0s_self="$(readlink -f -- "$_w1ld0s_self" 2>/dev/null || printf '%s\n' "$_w1ld0s_self")"
+# cd and pwd -P rather than trusting the string. The aliases.d test also
+# rejects a $0 that is no path of ours (zsh under POSIX_ARGZERO hands us the
+# interpreter), which would otherwise resolve to whatever the cwd happens to
+# be; only then is the clone location w1ld0s module 90 uses worth guessing at.
+_w1ld0s_self="$(unset CDPATH; cd -- "$(dirname -- "$_w1ld0s_self")" 2>/dev/null && pwd -P)"
+[ -d "${_w1ld0s_self}/aliases.d" ] || _w1ld0s_self="${HOME}/tools/repos/w1ld0s-tools"
+# $_W1LD0S_DIR and _target_source are this loader's interface to the fragments:
+# both are read from aliases.d/ (00-state.sh, 10-recon.sh) and so must outlive
+# this file, under a name unlikely to collide with anything else sourced into
+# the same shell.
+_W1LD0S_DIR="${W1LD0S_TOOLS_DIR:-${_w1ld0s_self}}"
+unset _w1ld0s_self
 # shellcheck source=/dev/null  # path is runtime-determined
 _target_source() { [ -r "$1" ] && . "$1"; return 0; }
 
@@ -26,6 +55,6 @@ _target_source() { [ -r "$1" ] && . "$1"; return 0; }
 #
 # Adding a fragment means adding it here.
 for _tf in 00-state 10-recon 20-access 30-infra 40-tunnels 50-time 60-research 90-shell; do
-    _target_source "${SOURCE_DIR}/aliases.d/${_tf}.sh"
+    _target_source "${_W1LD0S_DIR}/aliases.d/${_tf}.sh"
 done
 unset _tf

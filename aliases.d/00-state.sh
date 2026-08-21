@@ -6,10 +6,10 @@
 # it depend on $IP and $A_IP being set.
 
 for _tf in targ base name lab vpn; do
-    _target_source "${SOURCE_DIR}/engagement/target/config/${_tf}.sh"
+    _target_source "${_W1LD0S_DIR}/engagement/target/config/${_tf}.sh"
 done
 unset _tf
-_target_source "${SOURCE_DIR}/engagement/attack/attacker"
+_target_source "${_W1LD0S_DIR}/engagement/attack/attacker"
 
 # Our own address on the engagement network. Four functions below used to
 # derive this by hand, each with its own ip/awk pipeline, while `attack` exists
