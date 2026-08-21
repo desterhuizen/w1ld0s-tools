@@ -15,7 +15,12 @@
 #
 # Self-locating: $W1LD0S_TOOLS_DIR wins so a checkout anywhere still works,
 # otherwise fall back to where w1ld0s module 90 clones this repo.
-SOURCE_DIR="${W1LD0S_TOOLS_DIR:-${HOME}/tools/repos/w1ld0s-tools}"
+#
+# $_W1LD0S_DIR and _target_source are this loader's interface to the fragments:
+# both are read from aliases.d/ (00-state.sh, 10-recon.sh) and so must outlive
+# this file, under a name unlikely to collide with anything else sourced into
+# the same shell.
+_W1LD0S_DIR="${W1LD0S_TOOLS_DIR:-${HOME}/tools/repos/w1ld0s-tools}"
 # shellcheck source=/dev/null  # path is runtime-determined
 _target_source() { [ -r "$1" ] && . "$1"; return 0; }
 
@@ -26,6 +31,6 @@ _target_source() { [ -r "$1" ] && . "$1"; return 0; }
 #
 # Adding a fragment means adding it here.
 for _tf in 00-state 10-recon 20-access 30-infra 40-tunnels 50-time 60-research 90-shell; do
-    _target_source "${SOURCE_DIR}/aliases.d/${_tf}.sh"
+    _target_source "${_W1LD0S_DIR}/aliases.d/${_tf}.sh"
 done
 unset _tf
