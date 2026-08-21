@@ -48,7 +48,14 @@ _my_ip() {
         echo "$A_IP"
         return 0
     fi
-    ip -4 addr show dev "$dev" 2>/dev/null | awk '/inet /{print $2}' | cut -d/ -f1
+    # A pipeline's status is its last command's, and cut succeeds on empty
+    # input, so without this the interface-read path returned an empty string
+    # and status 0. Callers writing LHOST=$(_my_ip) got an empty LHOST and no
+    # reason to stop, then built a listener or payload pointing nowhere.
+    local addr
+    addr=$(ip -4 addr show dev "$dev" 2>/dev/null | awk '/inet /{print $2}' | cut -d/ -f1)
+    [ -n "$addr" ] || return 1
+    echo "$addr"
 }
 
 # Common paths (accessible as variables)
