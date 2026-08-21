@@ -20,8 +20,15 @@ if [[ $1 == "-d" ]]; then
   if [[ $check == "Y" ]]; then
     for i in "${items[@]}"; do
       LINK_PATH=$BASE_LINK_PATH$(basename "$i" | sed 's/\.[^.]*$//')
-      echo "Deleting ... $LINK_PATH"
-      rm -f "$LINK_PATH"
+      # Remove only what this repo put there. ~/.local/bin also holds shellcheck,
+      # ruff and codespell, and the names published here are generic enough
+      # (dump, attack, common, portlist) to collide with them.
+      if [[ -L $LINK_PATH && $(readlink -f "$LINK_PATH") == "$REPO_ROOT"/* ]]; then
+        echo "Deleting ... $LINK_PATH"
+        rm -f "$LINK_PATH"
+      elif [[ -e $LINK_PATH || -L $LINK_PATH ]]; then
+        echo "Skipping ... $LINK_PATH (not a link into $REPO_ROOT)"
+      fi
     done
   fi
   exit
