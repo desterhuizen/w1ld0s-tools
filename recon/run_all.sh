@@ -17,7 +17,7 @@ ports=$(grep open fast_scan.txt | cut -d '/' -f 1 | tr '\n' ',' | sed 's/,$//')
 sudo nmap -sV -sC -p"$ports" "$target_ip" -oN full_scan.txt
 
 # Directory scan using gobuster
-gobuster dir --u "http://$target_ip" -w /usr/share/wordlists/dirb/common.txt -o gobuster_scan.txt
+gobuster dir --u "http://$target_ip" -w "${WORDLISTS:-/opt/w1ld0s/wordlists}/dirb/common.txt" -o gobuster_scan.txt
 
 # vhost discovery
 nmap -sV --script http-vhosts "$target_ip" -oN vhost_scan.txt

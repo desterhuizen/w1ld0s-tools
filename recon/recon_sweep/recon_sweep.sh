@@ -152,7 +152,7 @@ if command -v ffuf &> /dev/null; then
     log_info "Running directory brute force on first 5 live hosts"
     head -n 5 "$recon_dir/live_assets.txt" | while read -r host; do
         log_info "Scanning directories on $host"
-        ffuf -u "${host}/FUZZ" -w /usr/share/wordlists/dirb/common.txt -c -v -o "$enum_dir/$(echo "$host" | sed 's/[:/]/_/g')_dirs.json"
+        ffuf -u "${host}/FUZZ" -w "${WORDLISTS:-/opt/w1ld0s/wordlists}/dirb/common.txt" -c -v -o "$enum_dir/$(echo "$host" | sed 's/[:/]/_/g')_dirs.json"
     done
     log_success "Directory brute force completed for sample targets"
 fi
