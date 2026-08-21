@@ -1,7 +1,12 @@
 #!/bin/bash
 
 # Constants
-ATTACKER_HOME="${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/engagement/attack"
+# Self-locating: $W1LD0S_TOOLS_DIR names the checkout root, so the
+# subdirectory has to be appended to it; with it unset or empty, follow the
+# ~/.local/bin symlink setup_links makes back to this file, which already
+# lives in engagement/attack.
+ATTACKER_HOME="${W1LD0S_TOOLS_DIR:+${W1LD0S_TOOLS_DIR}/engagement/attack}"
+ATTACKER_HOME="${ATTACKER_HOME:-$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd -P)}"
 ATTACKER_CONFIG="$ATTACKER_HOME/attacker"
 DEVICES=$(nmcli -c no -f device c 2>/dev/null | grep -v DEVICE || ifconfig | grep -o '^[a-z0-9]\+' | grep -v '^lo')
 
