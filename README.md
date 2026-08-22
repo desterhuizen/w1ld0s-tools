@@ -72,7 +72,7 @@ numeric order because `00-state.sh` exports what the rest read:
 ```text
 00-state    target/attack config, $IP, $A_IP, _my_ip
 10-recon    my_scan, /etc/hosts helpers, monitor_host
-20-access   listeners, PowerShell encoding, ysoserial
+20-access   listeners, PowerShell encoding, DotNetToJScript, ysoserial
 30-infra    serve, httptools, smb/ftp/http control
 40-tunnels  vpn, ligolo, reverse ssh
 50-time     clock alignment for Kerberos skew
