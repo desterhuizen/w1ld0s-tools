@@ -190,7 +190,7 @@ aircrack-ng -u
 ### Crack a pcap with a handshape
 
 ```bash
-aircrack-ng name-01.cap -w /usr/share/wordlists/rockyou.txt
+aircrack-ng name-01.cap -w $ROCKYOU
 ```
 
 ## Airdecap-ng
