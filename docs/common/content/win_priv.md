@@ -246,7 +246,7 @@ python2 ~/tools/creddump7/pwddump.py SYSTEM SAM
 
 Crack the hashes with hashcat:
 ```bash
-hashcat -m 1000 --force <HASH> /usr/share/wordlists/rockyou.txt
+hashcat -m 1000 --force <HASH> $ROCKYOU
 ```
 
 ### PassTheHash

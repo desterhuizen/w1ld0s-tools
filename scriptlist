@@ -5,7 +5,10 @@
 # This script shows an organized list of all tools in the w1ld0s-tools repository
 # with options for filtering and displaying details.
 
-SCRIPT_DIR="${W1LD0S_TOOLS_DIR:-${HOME}/tools/repos/w1ld0s-tools}"
+# Self-locating: $W1LD0S_TOOLS_DIR wins so a checkout anywhere still works,
+# otherwise follow the ~/.local/bin symlink setup_links makes back to this
+# file, whose own directory is the repo root.
+SCRIPT_DIR="${W1LD0S_TOOLS_DIR:-$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd -P)}"
 VERSION="1.0.0"
 
 # Define colors for better readability

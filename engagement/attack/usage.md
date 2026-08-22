@@ -33,10 +33,10 @@ attack --help
 
 ### Integration with Other Tools
 
-The attack tool creates a configuration file at `${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/engagement/attack/attacker` that contains environment variables. You can source this file in your scripts:
+The attack tool creates a configuration file named `attacker` beside the `attack` script itself, in `engagement/attack/` of the checkout — or under `$W1LD0S_TOOLS_DIR/engagement/attack/` when that variable is set. It contains environment variables, and you can source it in your scripts by resolving the published `attack` command back to the checkout the same way `attack` locates itself:
 
 ```bash
-source ${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/engagement/attack/attacker
+source "$(dirname "$(readlink -f "$(command -v attack)")")/attacker"
 echo "Using attack IP: $A_IP"
 ```
 
@@ -69,6 +69,6 @@ attack 10.10.14.2
 
 ## Configuration
 
-The tool stores configuration in: `${W1LD0S_TOOLS_DIR:-$HOME/tools/repos/w1ld0s-tools}/engagement/attack/attacker`
+The tool stores configuration in `engagement/attack/attacker` inside the checkout, or in `$W1LD0S_TOOLS_DIR/engagement/attack/attacker` when that variable is set.
 
 You can manually edit this file if needed, or simply run the tool again to update it.
