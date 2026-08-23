@@ -77,7 +77,7 @@ numeric order because `00-state.sh` exports what the rest read:
 40-tunnels  vpn, ligolo, reverse ssh
 50-time     clock alignment for Kerberos skew
 60-research htricks, gtfo, platt
-90-shell    navigation, git, single-letter shortcuts
+90-shell    navigation, git, ifconfig/iwconfig over ip, single-letter shortcuts
 ```
 
 Adding a fragment means adding its name to the list in `aliases` — the loader does not
