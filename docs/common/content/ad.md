@@ -9,7 +9,7 @@ exploitation, and lateral movement.
 
 The order you enumerate in matters more than the commands below. Work left to right:
 
-```
+```text
   no creds  ->  valid creds  ->  privileged creds  ->  DA / SYSTEM
  (anonymous)    (a user)        (admin somewhere)
 ```
