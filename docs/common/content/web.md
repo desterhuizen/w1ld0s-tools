@@ -2,6 +2,87 @@
 
 ---
 
+## Triage — Where To Start
+
+Fingerprint the application before fuzzing it. A product name plus a version routes you to a
+known exploit in minutes; a directory brute-force against an unidentified app can burn an hour
+and tell you nothing. Content discovery is the fallback, not the opening move.
+
+```
+  unknown app -> identified stack -> reachable surface -> a vuln class -> code exec / data
+```
+
+### Classify the app
+
+| What you see                                    | It's a...            | Go straight to                          |
+|-------------------------------------------------|----------------------|-----------------------------------------|
+| Known product + version (WordPress, Jenkins)    | Known-CVE target     | Search the version, do not fuzz         |
+| Custom app, session cookie, login form          | Bespoke app          | Auth, IDOR, injection                   |
+| `/api/`, JSON responses, JWT bearer tokens      | API                  | Swagger/OpenAPI, then JWT attacks       |
+| Static HTML, no forms, no cookies               | Thin surface         | vhosts — the real app is elsewhere      |
+| Admin panel on 8080/8443/9090                   | Management interface | Default credentials, always first       |
+| Any file upload or document preview             | High-value sink      | Upload abuse -> webshell                |
+
+```bash
+whatweb -a 3 "$URL"
+curl -skI "$URL"
+curl -sk "$URL/favicon.ico" | md5sum        # favicon hash identifies stripped stacks
+for p in robots.txt sitemap.xml .git/HEAD .env swagger.json; do
+  printf '%-16s %s\n' "$p" "$(curl -sk -o /dev/null -w '%{http_code}' "$URL/$p")"
+done
+```
+
+`.git/HEAD` returning 200 is full source disclosure — `git-dumper "$URL/.git/" out/`.
+
+### Map the surface, in this order
+
+1. **Virtual hosts and subdomains** — the most-missed surface. One IP serves different apps by
+   `Host:` header, and the default page is often a decoy.
+2. **Paths and files** — section 1 below. Set extensions from the stack, not the default list.
+3. **Parameters** — hidden inputs on pages you already have (`arjun`, `x8`, or ffuf a param list).
+
+Filter by response size or the results are meaningless — a soft-404 app answers 200 for
+everything. Use `ffuf -ac`, or establish the baseline and `-fs` it out.
+
+### Vulnerability class selector
+
+| Observation                                     | Class                | Where                      |
+|-------------------------------------------------|----------------------|----------------------------|
+| Param names a file (`?page=`, `?file=`)         | Traversal / LFI / RFI| section below, `common injections` |
+| Param reaches a shell (ping, convert, export)   | Command injection    | `common injections`        |
+| Input echoed through a template                 | SSTI                 | `common injections`        |
+| SQL errors, ORDER BY changes behaviour          | SQL injection        | `common injections`        |
+| XML accepted anywhere (SOAP, SAML, DOCX, SVG)   | XXE                  | `common injections`        |
+| Serialised blob in a cookie or parameter        | Deserialisation      | `common web_checklist`     |
+| Server fetches a URL you control                | SSRF                 | section below              |
+| Numeric or guessable object reference           | IDOR                 | section below              |
+| Input reflected into the page unescaped         | XSS                  | section below              |
+| File upload of any kind                         | Upload -> RCE        | `common phpdangerousfuncs` |
+
+### Stuck?
+
+Stuck on web almost always means unmapped surface, not an unfound payload.
+
+- [ ] Enumerated vhosts as well as subdomains?
+- [ ] Fuzzed with extensions matching the stack?
+- [ ] Mined JavaScript for endpoints, keys and commented-out routes?
+- [ ] Checked robots.txt, sitemap.xml, .git/, .env, and backup suffixes (.bak, .old, ~)?
+- [ ] Searched the exact product *and version* for CVEs?
+- [ ] Tried default credentials on every admin interface?
+- [ ] Tested headers as parameters (X-Forwarded-For, X-Original-URL, Referer)?
+- [ ] Used an out-of-band channel for blind classes?
+- [ ] Re-crawled **authenticated**? That surface is usually larger.
+- [ ] Walked `common web_checklist` for a class you have not considered at all?
+
+### One-line version
+
+Fingerprint before fuzzing -> map vhosts, paths, params -> find where input meets a sink ->
+prove blind cases out of band -> escalate to code exec -> re-crawl authenticated and repeat.
+
+A version number beats a wordlist.
+
+---
+
 ## Directory & File Enumeration
 
 ### Gobuster
