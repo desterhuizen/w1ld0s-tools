@@ -14,14 +14,14 @@ and tell you nothing. Content discovery is the fallback, not the opening move.
 
 ### Classify the app
 
-| What you see                                    | It's a...            | Go straight to                          |
-|-------------------------------------------------|----------------------|-----------------------------------------|
-| Known product + version (WordPress, Jenkins)    | Known-CVE target     | Search the version, do not fuzz         |
-| Custom app, session cookie, login form          | Bespoke app          | Auth, IDOR, injection                   |
-| `/api/`, JSON responses, JWT bearer tokens      | API                  | Swagger/OpenAPI, then JWT attacks       |
-| Static HTML, no forms, no cookies               | Thin surface         | vhosts — the real app is elsewhere      |
-| Admin panel on 8080/8443/9090                   | Management interface | Default credentials, always first       |
-| Any file upload or document preview             | High-value sink      | Upload abuse -> webshell                |
+| What you see                                 | It's a...            | Go straight to                     |
+| -------------------------------------------- | -------------------- | ---------------------------------- |
+| Known product + version (WordPress, Jenkins) | Known-CVE target     | Search the version, do not fuzz    |
+| Custom app, session cookie, login form       | Bespoke app          | Auth, IDOR, injection              |
+| `/api/`, JSON responses, JWT bearer tokens   | API                  | Swagger/OpenAPI, then JWT attacks  |
+| Static HTML, no forms, no cookies            | Thin surface         | vhosts — the real app is elsewhere |
+| Admin panel on 8080/8443/9090                | Management interface | Default credentials, always first  |
+| Any file upload or document preview          | High-value sink      | Upload abuse -> webshell           |
 
 ```bash
 whatweb -a 3 "$URL"
@@ -46,18 +46,18 @@ everything. Use `ffuf -ac`, or establish the baseline and `-fs` it out.
 
 ### Vulnerability class selector
 
-| Observation                                     | Class                | Where                      |
-|-------------------------------------------------|----------------------|----------------------------|
-| Param names a file (`?page=`, `?file=`)         | Traversal / LFI / RFI| section below, `common injections` |
-| Param reaches a shell (ping, convert, export)   | Command injection    | `common injections`        |
-| Input echoed through a template                 | SSTI                 | `common injections`        |
-| SQL errors, ORDER BY changes behaviour          | SQL injection        | `common injections`        |
-| XML accepted anywhere (SOAP, SAML, DOCX, SVG)   | XXE                  | `common injections`        |
-| Serialised blob in a cookie or parameter        | Deserialisation      | `common web_checklist`     |
-| Server fetches a URL you control                | SSRF                 | section below              |
-| Numeric or guessable object reference           | IDOR                 | section below              |
-| Input reflected into the page unescaped         | XSS                  | section below              |
-| File upload of any kind                         | Upload -> RCE        | `common phpdangerousfuncs` |
+| Observation                                   | Class                 | Where                              |
+| --------------------------------------------- | --------------------- | ---------------------------------- |
+| Param names a file (`?page=`, `?file=`)       | Traversal / LFI / RFI | section below, `common injections` |
+| Param reaches a shell (ping, convert, export) | Command injection     | `common injections`                |
+| Input echoed through a template               | SSTI                  | `common injections`                |
+| SQL errors, ORDER BY changes behaviour        | SQL injection         | `common injections`                |
+| XML accepted anywhere (SOAP, SAML, DOCX, SVG) | XXE                   | `common injections`                |
+| Serialised blob in a cookie or parameter      | Deserialisation       | `common web_checklist`             |
+| Server fetches a URL you control              | SSRF                  | section below                      |
+| Numeric or guessable object reference         | IDOR                  | section below                      |
+| Input reflected into the page unescaped       | XSS                   | section below                      |
+| File upload of any kind                       | Upload -> RCE         | `common phpdangerousfuncs`         |
 
 ### Stuck?
 
