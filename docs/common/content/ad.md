@@ -88,6 +88,10 @@ ldapdomaindump 192.168.0.53 -u 'whirley\userb' -p 'Password1234!'
 
 # PlumHound for reporting
 ipython3 PlumHound.py -x tasks/default.tasks -p '<neo4j password>'
+
+# bh-hunt: run the CE query pack against neo4j and flag red flags (no cypher-shell needed)
+bh-hunt -H <bloodhound-host> --owned 'SVC@DOM,BOB@DOM'
+bh-hunt -H <bloodhound-host> --min-severity high --json loot.json
 ```
 
 #### PingCastle

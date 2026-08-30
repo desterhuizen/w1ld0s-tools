@@ -151,6 +151,8 @@ function show_details() {
 
     # Windows
     echo -e "\n${YELLOW}WINDOWS:${NC}"
+    echo -e "${CYAN}bh-hunt${NC} - Run the BloodHound CE query pack against neo4j and flag red flags (bloodhound/bh-hunt.py)"
+    echo -e "        ${NC}bloodhound/bloodhound-ce-hunt.cypher - the query pack bh-hunt reads; edit to change what runs"
     echo -e "${CYAN}add_rroot${NC} - Add a UID 0 account on Linux (users/add_rroot.sh)"
     echo -e "        ${NC}powershell/Spray-Passwords.ps1 - password spraying against a domain"
     echo -e "        ${NC}powershell/switchTo64.ps1 - re-launch a 32-bit PowerShell as 64-bit"
