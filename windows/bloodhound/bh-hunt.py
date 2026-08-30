@@ -40,17 +40,45 @@ DEFAULTS = {"host": "localhost", "port": "7474", "user": "neo4j",
 
 class C:
     """ANSI colours, blanked when output is not a tty or --no-color is set."""
-    RED = GRN = YEL = CYN = DIM = BLD = RST = ""
+    RED = GRN = YEL = BLU = CYN = DIM = BLD = RST = ""
 
     @classmethod
     def enable(cls) -> None:
         cls.RED, cls.GRN, cls.YEL = "\033[31m", "\033[32m", "\033[33m"
-        cls.CYN, cls.DIM, cls.BLD, cls.RST = (
-            "\033[36m", "\033[2m", "\033[1m", "\033[0m")
+        cls.BLU, cls.CYN, cls.DIM = "\033[34m", "\033[36m", "\033[2m"
+        cls.BLD, cls.RST = "\033[1m", "\033[0m"
 
 
 SEV_COLOUR = {"critical": lambda: C.RED, "high": lambda: C.YEL,
               "medium": lambda: C.CYN, "info": lambda: C.DIM}
+
+
+# Message helpers, matching target.py's labelled INFO/SUCCESS/WARNING/ERROR
+# convention and its stream discipline (status on stdout, problems on stderr).
+# Built on the C toggle so the labels lose colour, not their text, when piped.
+# QUIET silences the two stdout helpers when JSON is going to stdout, so the
+# stream stays pure JSON; warnings and errors still reach stderr.
+
+QUIET = False
+
+
+def info(msg: str) -> None:
+    if not QUIET:
+        print(f"{C.BLD}{C.BLU}INFO:{C.RST} {msg}")
+
+
+def success(msg: str) -> None:
+    if not QUIET:
+        print(f"{C.BLD}{C.GRN}SUCCESS:{C.RST} {msg}")
+
+
+def warn(msg: str) -> None:
+    print(f"{C.BLD}{C.YEL}WARNING:{C.RST} {msg}", file=sys.stderr)
+
+
+def error_exit(msg: str, code: int = 1) -> None:
+    print(f"{C.BLD}{C.RED}ERROR:{C.RST} {msg}", file=sys.stderr)
+    raise SystemExit(code)
 
 
 def load_conf_defaults() -> dict[str, str]:
@@ -205,12 +233,14 @@ def mark_owned(db: Neo4j, names: str) -> None:
         "MATCH (n) WHERE n.name IN $names SET n.owned = true "
         "RETURN count(n) AS marked", {"names": principals})
     if res["error"]:
-        print(f"{C.RED}[-] failed to mark owned: {res['error']}{C.RST}")
+        warn(f"could not mark owned: {res['error']}")
         return
     marked = res["rows"][0][0] if res["rows"] else 0
-    unmatched = [p for p in principals if p]  # informational only
-    print(f"{C.GRN}[+] marked owned: {marked}/{len(unmatched)} matched "
-          f"({', '.join(principals)}){C.RST}")
+    if marked < len(principals):
+        warn(f"marked {marked} of {len(principals)} owned — "
+             f"{len(principals) - marked} name(s) matched nothing in the graph")
+    else:
+        success(f"marked {marked} owned: {', '.join(principals)}")
 
 
 def main() -> int:
@@ -238,6 +268,9 @@ def main() -> int:
     args = ap.parse_args()
 
     json_to_stdout = args.json == "-"
+    if json_to_stdout:
+        global QUIET
+        QUIET = True
     if not args.no_color and not json_to_stdout and sys.stdout.isatty():
         C.enable()
 
@@ -246,12 +279,14 @@ def main() -> int:
 
     ping = db.run("RETURN 1")
     if ping["error"]:
-        print(f"{C.RED}[-] cannot reach neo4j at {conn['host']}:{conn['port']} "
-              f"as {conn['user']}: {ping['error']}{C.RST}", file=sys.stderr)
-        print("    set --password / NEO4J_PASS "
-              "(CE default: bloodhoundcommunityedition)", file=sys.stderr)
-        return 1
+        error_exit(
+            f"cannot reach neo4j at {conn['host']}:{conn['port']} as "
+            f"{conn['user']}: {ping['error']}\n"
+            "       set --password / NEO4J_PASS "
+            "(CE default: bloodhoundcommunityedition)")
 
+    if not args.json:
+        info(f"connected to {conn['host']}:{conn['port']} as {conn['user']}")
     if args.owned:
         mark_owned(db, args.owned)
 
@@ -280,14 +315,22 @@ def main() -> int:
         hit = res["error"] is None and bool(res["rows"])
         if not hit and not res["error"] and not args.empty:
             continue
+        # Findings-list header: coloured severity first so the eye sorts by
+        # risk, then the label, then the row count (or the outcome).
         tag = SEV_COLOUR.get(sev, lambda: "")()
-        print()
-        print(f"{C.CYN}=== {q['name']} {tag}[{sev}]{C.RST} ===")
+        badge = f"{tag}{C.BLD}[{sev.upper():^8}]{C.RST}"
         if res["error"]:
-            print(f"  {C.RED}error: {res['error']}{C.RST}")
+            note = f"{C.RED}query error{C.RST}"
         elif not res["rows"]:
-            print(f"  {C.DIM}(no results){C.RST}")
+            note = f"{C.DIM}no hits{C.RST}"
         else:
+            n = len(res["rows"])
+            note = f"{C.DIM}{n} {'hit' if n == 1 else 'hits'}{C.RST}"
+        print()
+        print(f"{badge} {C.BLD}{q['name']}{C.RST}  {note}")
+        if res["error"]:
+            print(f"  {C.RED}{res['error']}{C.RST}")
+        elif res["rows"]:
             print_table(res)
 
     if args.json:
@@ -297,17 +340,19 @@ def main() -> int:
             print(out)
         else:
             Path(args.json).write_text(out)
-            print(f"{C.GRN}[+] wrote {len(collected)} results to {args.json}{C.RST}",
-                  file=sys.stderr)
+            success(f"wrote {len(collected)} results to {args.json}")
     else:
-        summary = "  ".join(
-            f"{SEV_COLOUR[s]()}{counts[s]} {s}{C.RST}"
+        summary = ", ".join(
+            f"{SEV_COLOUR[s]()}{C.BLD}{counts[s]} {s}{C.RST}"
             for s in SEVERITIES if counts[s])
         print()
-        print(f"[*] done. flagged: {summary or '(nothing)'}")
+        if summary:
+            success(f"flagged {summary}")
+        else:
+            info("no findings at or above the chosen severity")
         if not args.owned:
-            print("    tip: --owned 'USER@DOM,...' then re-run — most attack "
-                  "paths only appear once owned is set.")
+            info("mark owned then re-run — most attack paths only appear once "
+                 "owned is set:  bh-hunt -H <host> --owned 'USER@DOM,...'")
     return 0
 
 

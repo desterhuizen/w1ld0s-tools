@@ -180,6 +180,27 @@ RETURN u.name AS account, count(DISTINCT c) AS admin_on_count
 ORDER BY admin_on_count DESC
 LIMIT 15;
 
+// name: Outbound dangerous ACL control from any user (owned or not)
+// severity: high
+MATCH (u:User)-[r]->(m)
+WHERE r.isacl = true
+  AND type(r) IN ['GenericAll','GenericWrite','WriteDacl','WriteOwner','Owns',
+                  'AllExtendedRights','ForceChangePassword','AddMember',
+                  'AddKeyCredentialLink','AddSelf','WriteAccountRestrictions',
+                  'WriteSPN','AddAllowedToAct']
+RETURN u.name AS controller, type(r) AS edge, labels(m)[0] AS target_type,
+       m.name AS target
+ORDER BY controller, edge;
+
+// name: Users with the most outbound control (fan-out ranking)
+// severity: medium
+MATCH (u:User)-[r]->(m)
+WHERE r.isacl = true AND u <> m
+RETURN u.name AS controller, count(DISTINCT m) AS controls_count,
+       collect(DISTINCT type(r))[0..8] AS edge_types
+ORDER BY controls_count DESC
+LIMIT 15;
+
 // ===== KERBEROS ROASTING =====
 
 // name: Kerberoastable users (enabled)
