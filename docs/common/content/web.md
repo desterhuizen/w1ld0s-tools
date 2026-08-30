@@ -8,7 +8,7 @@ Fingerprint the application before fuzzing it. A product name plus a version rou
 known exploit in minutes; a directory brute-force against an unidentified app can burn an hour
 and tell you nothing. Content discovery is the fallback, not the opening move.
 
-```
+```text
   unknown app -> identified stack -> reachable surface -> a vuln class -> code exec / data
 ```
 
